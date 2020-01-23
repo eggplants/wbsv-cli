@@ -97,7 +97,7 @@ $ wbsv https://tsumanne.net --retry 10
 
 # VERSION
 
-`wbsv 0.0.1`
+`wbsv 0.0.2`
 
 # LISENCE
 MIT
