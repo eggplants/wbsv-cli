@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/usr/bin/zsh -eux
 echo -n "plz version: "
 read -r v
 echo "new version: ${v}"
@@ -9,7 +9,7 @@ for i in README.md setup.py wbsv/__init__.py wbsv/Archive.py;do
 done
 echo -n "rm build dist wbsv.egg-info ok?:"
 read
-rm -rf build dist wbsv.egg-info
+sudo rm -rf build dist wbsv.egg-info
 python3 setup.py sdist bdist_wheel
 echo -n "commit ok?:"
 read

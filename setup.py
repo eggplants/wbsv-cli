@@ -3,6 +3,7 @@ setup(
     name="wbsv",
     version="0.0.3",
     description="Throw all URIs in a page on to Wayback Machine savepagenow from CLI.",
+    description_content_type="",
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     url="https://github.com/eggplants/wbsv-cli",
