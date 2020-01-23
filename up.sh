@@ -5,7 +5,7 @@ echo "new version: ${v}"
 echo -n "update files ok?:"
 read
 for i in README.md setup.py wbsv/__init__.py wbsv/Archive.py;do
-  sed -r "s/[0-9]\.[0-9]\.[0-9]/${v}/" "${i}" |sponge "${i}"
+  sed -r "s/[0-9]\.[0-9]\.[0-9]/${v}/g" "${i}" |sponge "${i}"
 done
 echo -n "rm build dist wbsv.egg-info ok?:"
 read
@@ -15,5 +15,9 @@ echo -n "commit ok?:"
 read
 git add .
 git commit -m "launch ${v}"
-# twine upload --repository pypi dist/*
-# git push
+echo -n "deploy pypi ok?:"
+read
+twine upload --repository pypi dist/*
+echo -n "push github ok?:"
+read
+git push
