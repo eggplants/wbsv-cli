@@ -17,7 +17,7 @@ git add .
 git commit -m "launch ${v}"
 echo -n "deploy pypi ok?:"
 read
-twine upload --repository pypi dist/*
+/home/eggplants/usr/pip/bin/twine upload --repository pypi dist/*
 echo -n "push github ok?:"
 read
 git push
