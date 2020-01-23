@@ -9,7 +9,7 @@
 
 # DEMO
 
-![demo.gif]()
+![demo.gif](https://raw.githubusercontent.com/eggplants/wbsv-cli/master/demo.gif)
 
 # Install
 
