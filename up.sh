@@ -22,13 +22,15 @@ echo -n "commit ok?:"
 read -r f
 if [[ "${f}" -eq "y" ]];then
   git add .
-  git commit -m "launch ${v}"
+  echo "plz message: "
+  read -r m
+  git commit -m "${m}"
 fi
 
 echo -n "deploy pypi ok?:"
 read -r f
 if [[ "${f}" -eq "y" ]];then
-  twine upload --repository pypi dist/*
+  python3 -m twine upload --repository pypi dist/*
 fi
 
 echo -n "push github ok?:"
