@@ -18,7 +18,7 @@ def version():
   show version info.
   """
 
-  print("wbsv 0.0.2")
+  print("wbsv 0.0.3")
 
 def help():
   """

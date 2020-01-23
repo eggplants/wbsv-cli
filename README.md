@@ -23,7 +23,7 @@ $ pip install wbsv # Python3.0+
 
 ```bash
 $ wbsv -h
-wbsv 0.0.1
+wbsv 0.0.3
 CLI tool for save webpage on Wayback Machine forever.
 Save webpage and one's all URI(s) on Wayback Machine.
 
@@ -97,7 +97,7 @@ $ wbsv https://tsumanne.net --retry 10
 
 # VERSION
 
-`wbsv 0.0.2`
+`wbsv 0.0.3`
 
 # LISENCE
 MIT
