@@ -4,7 +4,7 @@
 
 - `wbsv`("Wabisavi", "わびさび", stands for "WayBack machine SavepageNow") is...
 
-  - CLI tool for save webpage on Wayback Machine forever.  
+  - CLI tool for saving webpage on Wayback Machine forever.
   - Enables you to **save all URIs** in a webpage forever on [Wayback Machine](https://archive.org/web/).
 
 # DEMO
@@ -23,8 +23,8 @@ $ pip install wbsv # Python3.0+
 
 ```bash
 $ wbsv -h
-wbsv 0.0.4
-CLI tool for save webpage on Wayback Machine forever.
+wbsv 0.0.5
+CLI tool for saving webpage on Wayback Machine forever.
 Save webpage and one's all URI(s) on Wayback Machine.
 
 Usage:
@@ -38,6 +38,7 @@ Options:
   -h, --help                  Show help and exit.
   -v, --version               Show version and exit.
   -r, --retry <times>         Give the limit of retry when saving fails.
+      --only-page             Save just target webpage(s).
 ```
 
 ## Interactive mode
@@ -97,7 +98,7 @@ $ wbsv https://tsumanne.net --retry 10
 
 # VERSION
 
-`wbsv 0.0.4`
+`wbsv 0.0.5`
 
 # LISENCE
 MIT

@@ -19,7 +19,7 @@ def version():
   show version info.
   """
 
-  print("wbsv 0.0.4")
+  print("wbsv 0.0.5")
 
 
 def help():
@@ -44,7 +44,8 @@ def help():
     Options:
     -h, --help                  Show help and exit.
     -v, --version               Show version and exit.
-    -r, --retry <times>         Give the limit of retry when saving fails.\
+    -r, --retry <times>         Give the limit of retry when saving fails.
+        --only-page             Save just target webpage(s).
     ''')
 
 
@@ -71,30 +72,28 @@ def show_err():
     err_msg = "[!]%s"%str(err).strip("<>")
     print(err_msg, file=stderr)
 
+def extract_uri(url):
+  """
+  Extract uri links from a page source.
+  """
 
-def archive(url, RETRY=3):
+  # extract elements containing of uri links in a page
+  uris_misc=BeautifulSoup(urlopen(url), "html.parser").findAll(["a", "img", "script", "link"])
+  # extract uri link data
+  uris_misc=sum([[i.get("href"), i.get("src")] for i in uris_misc], [])
+  # change "relative" uri into "absolute" one
+  uris_misc=[urljoin(url, i) for i in uris_misc]
+  # remove not available data from list
+  uri_list=set(list(filter(lambda x: x != None and len(x) > 1, uris_misc)))
+
+  return uri_list
+
+def archive(uri_list, pageurl, RETRY=3):
   """
   Save URIs extracted from the target page. (by using Module savepagenow)
   """
-
-  print("[+]Now: %s"%url)
-  # extract uris
-  uri_list=set(
-             list(
-               filter(
-                 lambda x:x!=None and len(x)>1,
-                 [
-                   urljoin(url,i) for i in sum(
-                   [[i.get("href"),i.get("src")] for i in BeautifulSoup(urlopen(url),"html.parser").findAll(["a","img","script","link"])],[]
-                   )
-                 ]
-               )
-             )
-           )
-
-  # appends `url`(seed URL) to `uri_list` (list of extracted uri)
-  uri_list.add(url)
-  print("%d URI(s) found."%len(uri_list))
+  print("[+]Now: %s"%pageurl)
+  print("[+]%d URI(s) found."%len(uri_list))
   # try to throw each uri to API
   count, saves, fails = 0, 0, 0
 
@@ -131,14 +130,16 @@ def archive(url, RETRY=3):
       show_err()
 
   # after for-loop
-  print("[+]FIN!: %s"%url)
+  print("[+]FIN!: %s"%pageurl)
   print("[+]ALL:", count, "SAVE:", saves, "FAIL:", fails)
 
 
-def interactive(retry=3):
+def interactive(opt):
   """
   Interactive mode like shell.
   """
+
+  retry = opt["retry"]
 
   while True:
     print("[[Input a target url (ex: https://google.com)]]")
@@ -151,7 +152,10 @@ def interactive(retry=3):
     # if the input is succeeded ...
     if is_url(url):
       try:
-        archive(url, retry)
+        if opt["only-page"]:
+          archive([url], url, retry)
+        else:
+          archive(extract_uri(url), url, retry)
         print("[+]To exit, use CTRL+C or type 'end'")
       except:
         show_err()
@@ -174,27 +178,39 @@ def parse_args():
   """
 
   # flags
-  param={"help":False, "version":False, "retry":3, "urls":[]}
+  param={
+          "help":False,
+          "version":False,
+          "retry":3,
+          "urls":[],
+          "only-page":False
+        }
   args = argv
   arg_str = "".join(args)
 
+  # -h, --help
   if "-h" in args or "--help" in args:
     param["help"] = True
 
+  # -v, --version
   if "-v" in args or "--version" in args:
     param["version"] = True
 
+  # --only-page
+  if "--only-page" in args:
+    param["only-page"] = True
+
+  # -r, --retry
   if compile(r'^.*-(-retry|r)[0-9]+[^.]*').match(arg_str):
     param["retry"] = int(search(r'^.*-(-retry|r)([0-9]+)', arg_str).group(2))
     if param["retry"] < 0:
       print("[!]Err: num of retry should be 0 or more.", file=stderr)
       exit(1)
-
   elif compile(r'^.*-(-retry|r)').match(arg_str):
     print("[!]-r, --retry option needs int.", file=stderr)
     exit(1)
 
-  param["urls"] = list(filter(lambda λ: is_url(λ), args))
+  param["urls"] = list(filter(lambda x: is_url(x), args))
   return param
 
 
@@ -213,11 +229,14 @@ def main():
     help()
 
   elif len(opt["urls"]) == 0:
-    interactive(opt["retry"])
+    interactive(opt)
 
+  elif opt["only-page"]:
+    for x in opt["urls"]:
+      archive([x], x, opt["retry"])
   else:
     for x in opt["urls"]:
-      archive(x, opt["retry"])
+      archive(extract_uri(x), x, opt["retry"])
 
   # if no errors occurred ...
   exit(0)
