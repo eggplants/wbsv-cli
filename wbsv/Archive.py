@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup
 from savepagenow import capture_or_cache
 from savepagenow.api import WaybackRuntimeError
 
+
 def version():
   """
   show version info.
@@ -20,53 +21,58 @@ def version():
 
   print("wbsv 0.0.4")
 
+
 def help():
   """
-  show this command's usage.
+  show usage.
   """
 
   print('''\
-CLI tool for save webpage on Wayback Machine forever.
-Save webpage and one's all URI(s) on Wayback Machine.
+    CLI tool for save webpage on Wayback Machine forever.
+    Save webpage and one's all URI(s) on Wayback Machine.
 
-Usage:
-  wbsv [options] <url1> <url2> ... <urln>
+    Usage:
+    wbsv [options] <url1> <url2> ... <urln>
 
-Args:
-  <urls>                      Saving pages in order.
-  no arg                      Launch Interactive mode.
-                              (To quit interactive mode,
-                               type "end", "exit", "exit()",
-                               "break", "bye", ":q" or "finish".)
+    Args:
+    <urls>                      Saving pages in order.
+    no arg                      Launch Interactive mode.
+                                (To quit interactive mode,
+                                type "end", "exit", "exit()",
+                                "break", "bye", ":q" or "finish".)
 
-Options:
-  -h, --help                  Show help and exit.
-  -v, --version               Show version and exit.
-  -r, --retry <times>         Give the limit of retry when saving fails.\
-  ''')
+    Options:
+    -h, --help                  Show help and exit.
+    -v, --version               Show version and exit.
+    -r, --retry <times>         Give the limit of retry when saving fails.\
+    ''')
+
 
 def is_url(url):
   """
   Judge whether str is url or not.
   """
-
   return compile(r'^(http|https)://').match(url)
+
 
 def is_end(url):
   """
   Judge whether str is the fin command to quit interactive mode or not.
   """
-
   return compile(r'^(end|exit|exit\(\)|break|bye|:q|finish)$').match(url)
 
-def err_show():
+
+def show_err():
   """
   Print error texts without stopping process when happening some error.
   """
 
-  [print("[!]%s"%str(i).strip("<>"),file=stderr) for i in list(exc_info())]
+  for err in list(exc_info()):
+    err_msg = "[!]%s"%str(err).strip("<>")
+    print(err_msg, file=stderr)
 
-def archive(url,RETRY=3):
+
+def archive(url, RETRY=3):
   """
   Save URIs extracted from the target page. (by using Module savepagenow)
   """
@@ -85,108 +91,136 @@ def archive(url,RETRY=3):
                )
              )
            )
-  # input url appends to extracted uris' list
+
+  # appends `url`(seed URL) to `uri_list` (list of extracted uri)
   uri_list.add(url)
+  print("%d URI(s) found."%len(uri_list))
   # try to throw each uri to API
-  count,saves,fails=0,0,0
+  count, saves, fails = 0, 0, 0
+
   for uri in uri_list:
-    if count==0:
-      print("%d URI(s) found."%len(uri_list))
-    count+=1
-    id=str(count).zfill(len(str(len(uri_list))))
+    count += 1
+
+    id_ = str(count).zfill(len(str(len(uri_list))))
+
     try:
-      for _ in range(RETRY):
+      for j in range(RETRY):
         try:
-          print("[%s]: Wait...    "%id,end="\r")
-          archived_uri,exist_flag=capture_or_cache(uri)
-          print("[%s]:"%id,
-                "<%s>"%"NOW" if exist_flag else "PAST",archived_uri)
-          saves+=1
+          print("[%s]: Wait...    "%id_, end="\r")
+          archived_uri, exist_flag = capture_or_cache(uri)  # use module of "savepagenow"
+          print("[%s]:"%id_,
+                "<%s>"%"NOW" if exist_flag else "PAST", archived_uri)
+          saves += 1
           break
+
         except WaybackRuntimeError:
-          if _!=RETRY-1:
-            print("[%s]: Retrying..."%id,"COUNT:%d"%(_+1),end="\r")
-            sleep(uniform(_+1,_+2))
+          if j != RETRY-1:
+            print("[%s]: Retrying..."%id_, "COUNT:%d"%(j+1), end="\r")
           else:
-            print("[%s]:"%id,"<FAIL> %s"%uri)
-            fails+=1
+            print("[%s]:"%id_, "<FAIL> %s"%uri)
+            fails += 1
+        # wait retrying
         sleep(uniform(1,3))
+
     except KeyboardInterrupt:
-      err_show()
-      print("[!]Halt.",file=stderr)
+      show_err()
+      print("[!]Halt.", file=stderr)
       break
+
     except:
-      err_show()
+      show_err()
+
+  # after for-loop
   print("[+]FIN!: %s"%url)
-  print("[+]ALL:",count,"SAVE:",saves,"FAIL:",fails)
+  print("[+]ALL:", count, "SAVE:", saves, "FAIL:", fails)
+
 
 def interactive(retry=3):
   """
   Interactive mode like shell.
   """
 
-  while 1:
+  while True:
     print("[[Input a target url (ex: https://google.com)]]")
     try:
-      url=input(">>> ")
-    except(EOFError,KeyboardInterrupt):
+      url = input(">>> ")
+    except(EOFError, KeyboardInterrupt):
       print("\n[+]End.")
       break
+
+    # if the input is succeeded ...
     if is_url(url):
       try:
-        archive(url,retry)
+        archive(url, retry)
         print("[+]To exit, use CTRL+C or type 'end'")
       except:
-        err_show()
+        show_err()
+
     elif is_end(url):
       print("[+]End.")
       break
-    elif url=='':
-      continue
-    else:
-      print("[!]This input is invalid.",file=stderr)
+
+    elif url == '':
       continue
 
-def opt_parse():
+    else:
+      print("[!]This input is invalid.", file=stderr)
+      continue
+
+
+def parse_args():
   """
   Parse arguments.
   """
 
   # flags
   param={"help":False, "version":False, "retry":3, "urls":[]}
-  args=argv
-  arg_str="".join(args)
+  args = argv
+  arg_str = "".join(args)
+
   if "-h" in args or "--help" in args:
-    param["help"]=True
+    param["help"] = True
+
   if "-v" in args or "--version" in args:
-    param["version"]=True
+    param["version"] = True
+
   if compile(r'^.*-(-retry|r)[0-9]+[^.]*').match(arg_str):
-    param["retry"]=int(search(r'^.*-(-retry|r)([0-9]+)',arg_str).group(2))
-    if param["retry"]<0:
-      print("[!]Err: num of retry should be 0 or more.",file=stderr)
+    param["retry"] = int(search(r'^.*-(-retry|r)([0-9]+)', arg_str).group(2))
+    if param["retry"] < 0:
+      print("[!]Err: num of retry should be 0 or more.", file=stderr)
       exit(1)
+
   elif compile(r'^.*-(-retry|r)').match(arg_str):
-    print("[!]-r, --retry option needs int.",file=stderr)
+    print("[!]-r, --retry option needs int.", file=stderr)
     exit(1)
-  param["urls"]=list(filter(lambda λ: is_url(λ), args))
+
+  param["urls"] = list(filter(lambda λ: is_url(λ), args))
   return param
+
 
 def main():
   """
   main
   """
 
-  opt=opt_parse()
+  opt = parse_args()  # parse optional arguments and get `opt`(type:dict)
+
   if opt["version"]:
     version()
+
   elif opt["help"]:
     version()
     help()
-  elif len(opt["urls"])==0:
+
+  elif len(opt["urls"]) == 0:
     interactive(opt["retry"])
+
   else:
-    for i in opt["urls"]:
-      archive(i,opt["retry"])
+    for x in opt["urls"]:
+      archive(x, opt["retry"])
+
+  # if no errors occurred ...
   exit(0)
+
 if __name__ == "__main__":
   main()
