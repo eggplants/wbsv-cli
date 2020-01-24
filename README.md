@@ -1,6 +1,7 @@
 # `wbsv`
 
-[![PyPI version](https://badge.fury.io/py/wbsv.svg)](https://badge.fury.io/py/wbsv)
+[![PyPI version](https://badge.fury.io/py/wbsv.svg)](https://badge.fury.io/py/wbsv) [![Maintainability](https://api.codeclimate.com/v1/badges/ce84fc17ef2b182eda26/maintainability)](https://codeclimate.com/github/eggplants/wbsv-cli/maintainability) [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+[![Downloads](https://pepy.tech/badge/wbsv)](https://pepy.tech/project/wbsv) [![Downloads](https://pepy.tech/badge/wbsv/month)](https://pepy.tech/project/wbsv/month) [![Downloads](https://pepy.tech/badge/wbsv/week)](https://pepy.tech/project/wbsv/week)
 
 - `wbsv`("Wabisavi", "わびさび", stands for "WayBack machine SavepageNow") is...
 
@@ -23,7 +24,7 @@ $ pip install wbsv # Python3.0+
 
 ```bash
 $ wbsv -h
-wbsv 0.0.5
+wbsv 0.0.6
 CLI tool for saving webpage on Wayback Machine forever.
 Save webpage and one's all URI(s) on Wayback Machine.
 
@@ -98,7 +99,7 @@ $ wbsv https://tsumanne.net --retry 10
 
 # VERSION
 
-`wbsv 0.0.5`
+`wbsv 0.0.6`
 
 # LISENCE
 MIT

@@ -6,7 +6,7 @@ echo "new version: ${v}"
 echo -n "update files ok?:"
 read -r f
 if [[ "${f}" -eq "y" ]];then
-  for i in README.md setup.py wbsv/__init__.py wbsv/Archive.py;do
+  for i in README.md setup.py wbsv/*;do
     sed -r "s/[0-9]\.[0-9]\.[0-9]/${v}/g" "${i}" |sponge "${i}"
   done
 fi
