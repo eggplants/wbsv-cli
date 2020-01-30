@@ -3,6 +3,7 @@ import re, random, sys, time
 from urllib.parse import *
 from urllib.request import urlopen
 from urllib.error import HTTPError
+from requests.exceptions import TooManyRedirects
 
 # Third-parties' Module
 from bs4 import BeautifulSoup
@@ -54,10 +55,7 @@ def find_uri(url):
     except HTTPError:
       return set()
 
-    html_source_charset = html_source.headers.get_content_charset()
-    if html_source_charset == None:
-      return set()
-
+    html_source_charset = html_source.headers.get_content_charset(failobj="utf-8")
     html_decoded = html_source.read().decode(
                      html_source_charset, 'ignore'
                    )
@@ -85,10 +83,12 @@ def extract_uri_recursive(url, rec):
     print("[+]LEVEL: %d" % lev)
     add_dic = set()
     remain_count = 1
+
     for url in search_queue[-1]:
       print("[+]REMAIN:%d/%d" % (remain_count, len(search_queue[-1])), end="\r")
       add_dic |= find_uri(url)
       remain_count += 1
+    print("[+]LEVEL: %d FINISHED!" % lev)
     uri_dic |= add_dic
     search_queue.append([i for i in add_dic if is_page(i)])
   return uri_dic
@@ -131,9 +131,16 @@ def archive(uri_dic, pageurl, RETRY, ONLYPAGE):
             # wait retrying
             time.sleep(random.uniform(1,3))
     except KeyboardInterrupt:
-      show_err()
+      print("[!]Interrupted!", file=sys.stderr)
       print("[!]Halt.", file=sys.stderr)
       break
+
+    except TooManyRedirects:
+      print("[!]API says:TooManyRedirects!", file=sys.stderr)
+      print("[!]Need a 1min break...", file=sys.stderr)
+      for t in range(60):
+        print("%d/60s" % t,end="\r", file=sys.stderr)
+        sleep(1)
 
     except:
       show_err()
