@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name="wbsv",
-    version="0.0.6",
+    version="0.0.7",
     description="Throw all URIs in a page on to Wayback Machine savepagenow from CLI.",
     description_content_type="",
     long_description=open('README.md').read(),

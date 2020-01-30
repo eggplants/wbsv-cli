@@ -5,8 +5,7 @@ def interactive(opt):
   """
   Interactive mode like shell.
   """
-
-  retry = opt["retry"]
+  #print(opt) #show flags for debugging...
 
   while True:
     print("[[Input a target url (ex: https://google.com)]]")
@@ -19,10 +18,12 @@ def interactive(opt):
     # if the input is succeeded ...
     if Archive.is_url(url):
       try:
-        if opt["only-page"]:
-          Archive.archive([url], url, retry)
+        if opt["only-target"]:
+          Archive.archive([url], url, opt["retry"], opt["only-page"])
         else:
-          Archive.archive(Archive.extract_uri(url), url, retry)
+          Archive.archive(Archive.extract_uri_recursive(
+            url,opt["recursive"]),
+          url, opt["retry"], opt["only-page"])
         print("[+]To exit, use CTRL+C or type 'end'")
       except:
         Archive.show_err()

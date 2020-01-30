@@ -26,7 +26,7 @@ def main():
       Archive.archive([x], x, opt["retry"])
   else:
     for x in opt["urls"]:
-      Archive.archive(Archive.extract_uri(x), x, opt["retry"])
+      Archive.archive(Archive.extract_uri_recursive(x, opt["recursive"]), x, opt["retry"])
 
   # if no errors occurred ...
   exit(0)
