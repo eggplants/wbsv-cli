@@ -2,6 +2,7 @@
 import re, random, sys, time
 from urllib.parse import *
 from urllib.request import urlopen
+from urllib.error import HTTPError
 
 # Third-parties' Module
 from bs4 import BeautifulSoup
@@ -48,7 +49,19 @@ def find_uri(url):
     # remove not available data from list
     remove_useless=lambda l:{x for x in l if x != None and len(x) > 1}
     # extract elements containing of uri links in a page
-    uris_misc=BeautifulSoup(urlopen(url), "html.parser").findAll(
+    try:
+      html_source = urlopen(url)
+    except HTTPError:
+      return set()
+
+    html_source_charset = html_source.headers.get_content_charset()
+    if html_source_charset == None:
+      return set()
+
+    html_decoded = html_source.read().decode(
+                     html_source_charset, 'ignore'
+                   )
+    uris_misc=BeautifulSoup(html_decoded, "html.parser").findAll(
                 ["a", "img", "script", "link"]
               )
     # extract uri link data
@@ -59,7 +72,7 @@ def find_uri(url):
 
 
 # oldname: extract_uri
-def extract_uri_recursive(url,rec):
+def extract_uri_recursive(url, rec):
   """
   Extract uri links from a page.
   """
@@ -71,10 +84,11 @@ def extract_uri_recursive(url,rec):
   for lev in range(rec):
     print("[+]LEVEL: %d" % lev)
     add_dic = set()
-
+    remain_count = 1
     for url in search_queue[-1]:
+      print("[+]REMAIN:%d/%d" % (remain_count, len(search_queue[-1])), end="\r")
       add_dic |= find_uri(url)
-
+      remain_count += 1
     uri_dic |= add_dic
     search_queue.append([i for i in add_dic if is_page(i)])
   return uri_dic

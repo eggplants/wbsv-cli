@@ -21,12 +21,12 @@ def main():
   elif len(opt["urls"]) == 0:
     Interact.interactive(opt)
 
-  elif opt["only-page"]:
+  elif opt["only-target"]:
     for x in opt["urls"]:
-      Archive.archive([x], x, opt["retry"])
+      Archive.archive([x], x, opt["retry"], opt["only-page"])
   else:
     for x in opt["urls"]:
-      Archive.archive(Archive.extract_uri_recursive(x, opt["recursive"]), x, opt["retry"])
+      Archive.archive(Archive.extract_uri_recursive(x, opt["recursive"]), x, opt["retry"], opt["only-page"])
 
   # if no errors occurred ...
   exit(0)
