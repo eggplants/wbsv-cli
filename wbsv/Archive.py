@@ -1,6 +1,6 @@
 # Built-in Module
 import re, random, sys, time
-from urllib.parse import *
+from urllib.parse import urlparse
 from urllib.request import urlopen
 from urllib.error import HTTPError
 from requests.exceptions import TooManyRedirects
@@ -36,6 +36,11 @@ def is_page(url):
   return not url_parts.fragment and not url_parts.path.endswith(
              exclude_suffixes)
 
+def is_valid_scheme(url):
+  """
+  Judge whether url is valid scheme or not
+  """
+  return urlparse(url).scheme in ["ftp", "gopher", "http", "https"]
 
 def show_err():
   """
@@ -48,7 +53,7 @@ def show_err():
 
 def find_uri(url):
     # remove not available data from list
-    remove_useless=lambda l:{x for x in l if x != None and len(x) > 1}
+    remove_useless = lambda l: {x for x in l if x != None and len(x) > 1}
     # extract elements containing of uri links in a page
     try:
       html_source = urlopen(url)
@@ -59,13 +64,15 @@ def find_uri(url):
     html_decoded = html_source.read().decode(
                      html_source_charset, 'ignore'
                    )
-    uris_misc=BeautifulSoup(html_decoded, "html.parser").findAll(
+    uris_misc = BeautifulSoup(html_decoded, "html.parser").findAll(
                 ["a", "img", "script", "link"]
               )
     # extract uri link data
-    uris_misc=sum([[i.get("href"), i.get("src")] for i in uris_misc], [])
+    uris_misc = sum([[i.get("href"), i.get("src")] for i in uris_misc], [])
     # change "relative" uri into "absolute" one
-    uris_misc={urljoin(url, i) for i in uris_misc}
+    uris_misc = {urljoin(url, i) for i in uris_misc}
+    # exclude mailto:// or javascript:// ...
+    uris_misc = {i for i in uri_misc if is_valid_scheme(i)}
     return remove_useless(uris_misc)
 
 
@@ -140,7 +147,7 @@ def archive(uri_dic, pageurl, RETRY, ONLYPAGE):
       print("[!]Need a 1min break...", file=sys.stderr)
       for t in range(60):
         print("%d/60s" % t,end="\r", file=sys.stderr)
-        sleep(1)
+        time.sleep(1)
 
     except:
       show_err()
