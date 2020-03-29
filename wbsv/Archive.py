@@ -1,6 +1,6 @@
 # Built-in Module
 import re, random, sys, time
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 from urllib.request import urlopen
 from urllib.error import HTTPError
 from requests.exceptions import TooManyRedirects
