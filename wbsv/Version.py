@@ -3,5 +3,5 @@ def version():
   show version info.
   """
 
-  print("wbsv 0.0.10")
+  print("wbsv 0.0.1110")
 
