@@ -21,9 +21,8 @@ Options:
     -h, --help                  Show help and exit.
     -v, --version               Show version and exit.
     -r, --retry <times>         Set a retry limit on failed save.
-        --only-target           Save just target webpage(s).
-    -l, --log-to-file <file>    Write STDOUT to a specified file.
+    -t,  --only-target           Save just target webpage(s).
     -L, --recursive <level>     Set maximum recursion depth.
-        --only-page             Get only URIs of type web page.
+    -p, --only-page             Get only URIs of type web page.
 ''',end="")
 

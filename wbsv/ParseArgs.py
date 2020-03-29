@@ -29,8 +29,8 @@ def parse_args():
   if "-v" in args or "--version" in args:
     param["version"] = True
 
-  # --only-target
-  if "--only-target" in args:
+  # -t, --only-target
+  if "-t" in args or "--only-target" in args:
     param["only-target"] = True
 
   # -r, --retry
@@ -53,11 +53,10 @@ def parse_args():
     print("[!]-L, --recursive option needs int.", file=sys.stderr)
     exit(1)
 
-  # --only-page
-  if "--only-page" in args:
+  # -p, --only-page
+  if "-p" in args or "--only-page" in args:
     param["only-page"] = True
 
 
   param["urls"] = list(filter(lambda x: Archive.is_url(x), args))
   return param
-
