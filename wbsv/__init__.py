@@ -1,6 +1,6 @@
 import wbsv
 
-__version__ = "0.0.1110"
+__version__ = "0.1.0110"
 
 __all__ = (
     'archive',

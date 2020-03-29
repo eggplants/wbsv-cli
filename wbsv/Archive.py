@@ -72,7 +72,7 @@ def find_uri(url):
     # change "relative" uri into "absolute" one
     uris_misc = {urljoin(url, i) for i in uris_misc}
     # exclude mailto:// or javascript:// ...
-    uris_misc = {i for i in uri_misc if is_valid_scheme(i)}
+    uris_misc = {i for i in uris_misc if is_valid_scheme(i)}
     return remove_useless(uris_misc)
 
 
