@@ -16,7 +16,7 @@ def main():
 
   elif opt["help"]:
     Version.version()
-    Help.help()
+    Help.show_help()
 
   elif len(opt["urls"]) == 0:
     Interact.interactive(opt)
@@ -26,7 +26,7 @@ def main():
       Archive.archive([x], x, opt["retry"], opt["only-page"])
   else:
     for x in opt["urls"]:
-      Archive.archive(Archive.extract_uri_recursive(x, opt["recursive"]), x, opt["retry"], opt["only-page"])
+      Archive.archive(Archive.extract_uri_recursive(x, opt["level"]), x, opt["retry"], opt["only-page"])
 
   # if no errors occurred ...
   exit(0)

@@ -1,4 +1,4 @@
-def help():
+def show_help():
   """
   show usage.
   """
@@ -21,10 +21,9 @@ Options:
     -h, --help                  Show help and exit.
     -v, --version               Show version and exit.
     -r, --retry <times>         Set a retry limit on failed save.
-    -t,  --only-target           Save just target webpage(s).
-    -L, --recursive <level>     Set maximum recursion depth.
+    -t, --only-target           Save just target webpage(s).
+    -L, --level <depth>         Set maximum recursion depth.
     -p, --only-page             Get only URIs that are considered web pages.
                                 (Exclude URIs of images, videos, css, js ...)
 
 ''',end="")
-

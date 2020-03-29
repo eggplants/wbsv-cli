@@ -22,7 +22,7 @@ def interactive(opt):
           Archive.archive([url], url, opt["retry"], opt["only-page"])
         else:
           Archive.archive(Archive.extract_uri_recursive(
-            url,opt["recursive"]),
+            url,opt["level"]),
           url, opt["retry"], opt["only-page"])
         print("[+]To exit, use CTRL+C or type 'end'")
       except:

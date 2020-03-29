@@ -15,7 +15,7 @@ def parse_args():
           "only-target":False,
           "errout":sys.stderr,
           "out":sys.stdout,
-          "recursive":0,
+          "level":0,
           "only-page":False,
         }
   args = sys.argv
@@ -43,14 +43,14 @@ def parse_args():
     print("[!]-r, --retry option needs int.", file=sys.stderr)
     exit(1)
 
-  # -L, --recursive
-  if re.compile(r'^.*-(-recursive|L)[0-9]+[^.]*').match(arg_str):
-    param["recursive"] = int(re.search(r'^.*-(-recursive|L)([0-9]+)', arg_str).group(2))
-    if param["recursive"] < 0:
+  # -L, --level
+  if re.compile(r'^.*-(-level|L)[0-9]+[^.]*').match(arg_str):
+    param["level"] = int(re.search(r'^.*-(-level|L)([0-9]+)', arg_str).group(2))
+    if param["level"] < 0:
       print("[!]Err: num of retry should be 0 or more.", file=sys.stderr)
       exit(1)
-  elif re.compile(r'^.*-(-recursive|L)').match(arg_str):
-    print("[!]-L, --recursive option needs int.", file=sys.stderr)
+  elif re.compile(r'^.*-(-level|L)').match(arg_str):
+    print("[!]-L, --level option needs int.", file=sys.stderr)
     exit(1)
 
   # -p, --only-page

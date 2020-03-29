@@ -8,7 +8,7 @@ echo -n "update files ok?:"
 read -r f
 if [[ "${f}" -eq 'y' ]]; then
 	for i in README.md setup.py wbsv/*py; do
-		sed -r "s/[0-9]\.[0-9]\.[0-9]/${v}/g" "${i}" | sponge "${i}"
+		sed -r "s/[0-9]+\.[0-9]+\.[0-9]+/${v}/g" "${i}" | sponge "${i}"
 	done
 fi
 

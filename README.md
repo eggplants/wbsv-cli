@@ -28,7 +28,7 @@ $ pip install wbsv # Python3.0+
 
 ```bash
 $ wbsv -h
-wbsv 0.2.0110
+wbsv 0.1.2
 CLI tool for save webpage on Wayback Machine forever.
 Save webpage and one's all URI(s) on Wayback Machine.
 
@@ -47,8 +47,7 @@ Options:
     -v, --version               Show version and exit.
     -r, --retry <times>         Set a retry limit on failed save.
     -t, --only-target           Save just target webpage(s).
-    -l, --log-to-file <file>    Write STDOUT to a specified file.
-    -L, --recursive <level>     Set maximum recursion depth.
+    -L, --level <depth>          Set maximum recursion depth.
     -p, --only-page             Get only URIs that are considered web pages.
                                 (Exclude URIs of images, videos, css, js ...)
 ```
