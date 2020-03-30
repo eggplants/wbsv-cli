@@ -17,16 +17,13 @@ def interactive(opt):
 
     # if the input is succeeded ...
     if Archive.is_url(url):
-      try:
-        if opt["only-target"]:
-          Archive.archive([url], url, opt["retry"], opt["only-page"])
-        else:
-          Archive.archive(Archive.extract_uri_recursive(
+      if opt["only-target"]:
+        Archive.archive([url], url, opt["retry"], opt["only-page"])
+      else:
+        Archive.archive(Archive.extract_uri_recursive(
             url,opt["level"]),
-          url, opt["retry"], opt["only-page"])
+            url, opt["retry"], opt["only-page"])
         print("[+]To exit, use CTRL+C or type 'end'")
-      except:
-        Archive.show_err()
 
     elif Archive.is_end(url):
       print("[+]End.")

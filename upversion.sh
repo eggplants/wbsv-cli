@@ -1,5 +1,6 @@
 #!/usr/bin/zsh
 
+echo "?=>(y|RETURN KEY)"
 echo -n "plz version: "
 read -r v
 
@@ -8,7 +9,7 @@ echo -n "update files ok?:"
 read -r f
 if [[ "${f}" -eq 'y' ]]; then
 	for i in README.md setup.py wbsv/*py; do
-		sed -r "s/[0-9]+\.[0-9]+\.[0-9]+/${v}/g" "${i}" | sponge "${i}"
+		sed -i -r "s_[0-9]+\.[0-9]+\.[0-9]+_${v}_g" "${i}"
 	done
 fi
 

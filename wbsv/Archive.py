@@ -2,7 +2,7 @@
 import re, random, sys, time
 from urllib.parse import urlparse, urljoin
 from urllib.request import urlopen
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 from requests.exceptions import TooManyRedirects
 
 # Third-parties' Module
@@ -11,8 +11,8 @@ from savepagenow import capture_or_cache
 from savepagenow.api import WaybackRuntimeError
 
 # local Module
-from . import Version
-from . import Help
+# from . import Version
+# from . import Help
 
 def is_url(url):
   """
@@ -31,7 +31,7 @@ def is_page(url):
   """
   Judge whether str is webpage or not
   """
-  exclude_suffixes = (".png", ".jpg", ".jpeg", ".gif", ".js", ".css", ".svg")
+  exclude_suffixes = (".css", ".gif", ".jpeg", ".jpg", ".js", ".json", ".png", ".svg")
   url_parts = urlparse(url)
   return not url_parts.fragment and not url_parts.path.endswith(
              exclude_suffixes)
@@ -56,8 +56,11 @@ def find_uri(url):
     remove_useless = lambda l: {x for x in l if x != None and len(x) > 1}
     # extract elements containing of uri links in a page
     try:
+      print(url) # DEBUGGGGGG
       html_source = urlopen(url)
     except HTTPError:
+      return set()
+    except URLError:
       return set()
 
     html_source_charset = html_source.headers.get_content_charset(failobj="utf-8")
@@ -148,9 +151,6 @@ def archive(uri_dic, pageurl, RETRY, ONLYPAGE):
       for t in range(60):
         print("%d/60s" % t,end="\r", file=sys.stderr)
         time.sleep(1)
-
-    except:
-      show_err()
 
   # after for-loop
   print("[+]FIN!: %s"%pageurl)
