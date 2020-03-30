@@ -5,12 +5,12 @@
 
 ## `wbsv`("Wabisavi", "わびさび", stands for "WayBack machine SavepageNow") is…
 
-  * CLI tool for saving webpage on Wayback Machine forever.
-  * Enables you to **save all URIs** in a webpage forever on [Wayback Machine](https://archive.org/web/).
+CLI tool for saving webpage on Wayback Machine forever.
+Enables you to **save all URIs** in a webpage forever on [Wayback Machine](https://archive.org/web/).
 
 ## Try now
 
-  * You can try this tool on Google Cloud Shell. (First, `sudo pip3 install -e .`)
+You can try this tool on Google Cloud Shell. (First, `sudo pip3 install -e .`)
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.png)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/eggplants/wbsv-cli&tutorial=README.md)
 
