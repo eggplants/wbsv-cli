@@ -58,5 +58,5 @@ def parse_args():
     param["only-page"] = True
 
 
-  param["urls"] = list(filter(lambda x: Archive.is_url(x), args))
+  param["urls"] = [i for i in args if Archive.is_url(i)]
   return param

@@ -56,7 +56,7 @@ def find_uri(url):
     remove_useless = lambda l: {x for x in l if x != None and len(x) > 1}
     # extract elements containing of uri links in a page
     try:
-      print(url) # DEBUGGGGGG
+      # print("->", url)
       html_source = urlopen(url)
     except HTTPError:
       return set()
