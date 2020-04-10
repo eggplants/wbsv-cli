@@ -135,7 +135,7 @@ def archive(uri_dic, pageurl, RETRY, ONLYPAGE):
           if j != RETRY:
             print("[%s]: Retrying..."%id_, "COUNT:%d"%j, end="\r")
           else:
-            print("[%s]:"%id_, "<FAIL> %s"%uri)
+            print("[%s"%id_ + "/" + "%d]:"%len(uri_dic), "<FAIL> %s"%uri)
             fails += 1
         finally:
             # wait retrying
@@ -147,7 +147,7 @@ def archive(uri_dic, pageurl, RETRY, ONLYPAGE):
 
     except TooManyRedirects:
       print("[!]API says:TooManyRedirects!", file=sys.stderr)
-      print("[!]Need a 1min break...", file=sys.stderr)
+      print("[!]Need a 1 min break...", file=sys.stderr)
       for t in range(60):
         print("%d/60s" % t,end="\r", file=sys.stderr)
         time.sleep(1)
