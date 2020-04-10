@@ -127,7 +127,7 @@ def archive(uri_dic, pageurl, RETRY, ONLYPAGE):
           print("[%s]: Wait...    "%id_, end="\r")
           archived_uri, exist_flag = capture_or_cache(uri)  # use module of "savepagenow"
           print("[%s]:"%id_,
-                "<%s>"%"NOW" if exist_flag else "PAST", archived_uri)
+                "<%s"%"NOW" if exist_flag else "PAST" + "/" + "%d"%len(uri_dic), archived_uri)
           saves += 1
           break
 
