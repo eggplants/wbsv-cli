@@ -23,10 +23,10 @@ def main():
 
   elif opt["only-target"]:
     for x in opt["urls"]:
-      Archive.archive([x], x, opt["retry"], opt["only-page"])
+      Archive.archive([x], x, opt["retry"])
   else:
     for x in opt["urls"]:
-      Archive.archive(Archive.extract_uri_recursive(x, opt["level"]), x, opt["retry"], opt["only-page"])
+      Archive.archive(Archive.extract_uri_recursive(x, opt["level"]), x, opt["retry"])
 
   # if no errors occurred ...
   exit(0)
