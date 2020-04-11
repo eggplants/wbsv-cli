@@ -68,10 +68,10 @@ def find_uri(url):
                      html_source_charset, 'ignore'
                    )
     uris_misc = BeautifulSoup(html_decoded, "html.parser").findAll(
-                ["a", "img", "script", "link"]
+                ["a"]
               )
     # extract uri link data
-    uris_misc = sum([[i.get("href"), i.get("src")] for i in uris_misc], [])
+    uris_misc = sum([[i.get("href")] for i in uris_misc], [])
     # change "relative" uri into "absolute" one
     uris_misc = {urljoin(url, i) for i in uris_misc}
     # exclude mailto:// or javascript:// ...
@@ -116,6 +116,8 @@ def archive(uri_dic, pageurl, RETRY, ONLYPAGE):
   # try to throw each uri to API
   count, saves, fails = 0, 0, 0
 
+  dic_size = len(uri_dic)
+  
   for uri in uri_dic:
     count += 1
 
@@ -124,9 +126,9 @@ def archive(uri_dic, pageurl, RETRY, ONLYPAGE):
     try:
       for j in range(1,RETRY+1):
         try:
-          print("[%s]: Wait...    "%id_, end="\r")
+          print("[%s]: Wait..."%id_, end="\r")
           archived_uri, exist_flag = capture_or_cache(uri)  # use module of "savepagenow"
-          print("[%s]:"%id_,
+          print("[%s"%id_, "/", dic_size, "]:",
                 "<%s>"%"NOW" if exist_flag else "PAST", archived_uri)
           saves += 1
           break
@@ -135,7 +137,7 @@ def archive(uri_dic, pageurl, RETRY, ONLYPAGE):
           if j != RETRY:
             print("[%s]: Retrying..."%id_, "COUNT:%d"%j, end="\r")
           else:
-            print("[%s]:"%id_, "<FAIL> %s"%uri)
+            print("[%s"%id_, "/", dic_size, "]:", "<FAIL> %s"%uri)
             fails += 1
         finally:
             # wait retrying
@@ -146,8 +148,8 @@ def archive(uri_dic, pageurl, RETRY, ONLYPAGE):
       break
 
     except TooManyRedirects:
-      print("[!]API says:TooManyRedirects!", file=sys.stderr)
-      print("[!]Need a 1min break...", file=sys.stderr)
+      print("[!]API says: TooManyRedirects!", file=sys.stderr)
+      print("[!]Need a 1 min break...", file=sys.stderr)
       for t in range(60):
         print("%d/60s" % t,end="\r", file=sys.stderr)
         time.sleep(1)
