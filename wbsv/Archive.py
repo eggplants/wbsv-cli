@@ -115,9 +115,8 @@ def archive(uri_dic, pageurl, RETRY, ONLYPAGE):
   print("[+]%d URI(s) found."%len(uri_dic))
   # try to throw each uri to API
   count, saves, fails = 0, 0, 0
-
   dic_size = len(uri_dic)
-  
+
   for uri in uri_dic:
     count += 1
 
@@ -126,18 +125,18 @@ def archive(uri_dic, pageurl, RETRY, ONLYPAGE):
     try:
       for j in range(1,RETRY+1):
         try:
-          print("[%s]: Wait..."%id_, end="\r")
+          print("[%s/%d]: Wait..."%(id_, dic_size), end="\r")
           archived_uri, exist_flag = capture_or_cache(uri)  # use module of "savepagenow"
-          print("[%s"%id_, "/", dic_size, "]:",
+          print("[%s/%d]:"%(id_, dic_size),
                 "<%s>"%"NOW" if exist_flag else "PAST", archived_uri)
           saves += 1
           break
 
         except WaybackRuntimeError:
           if j != RETRY:
-            print("[%s]: Retrying..."%id_, "COUNT:%d"%j, end="\r")
+            print("[%s/%d]: Retrying..."%(id_, dic_size), "COUNT:%d"%j, end="\r")
           else:
-            print("[%s"%id_, "/", dic_size, "]:", "<FAIL> %s"%uri)
+            print("[%s/%d]:"%(id_, dic_size), "<FAIL> %s"%uri)
             fails += 1
         finally:
             # wait retrying
