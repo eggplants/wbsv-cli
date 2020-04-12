@@ -10,7 +10,7 @@ Enables you to **save all URIs** in a webpage forever on [Wayback Machine](https
 
 ## Try now
 
-You can try this tool on Google Cloud Shell. (First, `sudo pip3 install -e .`)
+You can try this tool on Google Cloud Shell. (First, `sudo python3 -m pip install -e .`)
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.png)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/eggplants/wbsv-cli&tutorial=README.md)
 
@@ -57,27 +57,22 @@ Options:
 ```bash
 $ wbsv
 [[Input a target url (ex: https://google.com)]]
->>> https://tsukuba.ac.jp
-[!]Now: https://tsukuba.ac.jp
-[!]class 'urllib.error.URLError'
-[!]urlopen error [Errno -2] Name or service not known
-[!]traceback object at 0x7eff0d207188
-[[Input a target url (ex: https://google.com)]]
 >>> https://www.u.tsukuba.ac.jp
 [+]Now: https://www.u.tsukuba.ac.jp
-87 URI(s) found.
-[01]: <NOW> https://web.archive.org/web/20200123135244/https://www.u.tsukuba.ac.jp/20180622terminals/
-[02]: <NOW> https://web.archive.org/web/20200123135247/https://www.u.tsukuba.ac.jp/
-[03]: <NOW> https://web.archive.org/web/20200123135250/https://www.u.tsukuba.ac.jp/anti-virus/
+[+]60 URI(s) found.
+[01/60]: <NOW> https://web.archive.org/web/20200412020015/https://www.u.tsukuba.ac.jp/password/
+[02/60]: <FAIL> https://www.u.tsukuba.ac.jp/info_lit/tebiki.html
+[03/60]: <NOW> https://web.archive.org/web/20200412020026/https://www.u.tsukuba.ac.jp/account/
 ...
-[85]: <NOW> https://web.archive.org/web/20200123140917/https://www.u.tsukuba.ac.jp/snapshot/
-[86]: <FAIL> https://www.u.tsukuba.ac.jp/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.u.tsukuba.ac.jp%2F&format=xml
-[87]: <FAIL> https://www.u.tsukuba.ac.jp/info_lit/tebiki.html
+[58/60]: <NOW> https://web.archive.org/web/20200412022608/https://www.u.tsukuba.ac.jp/phishing/
+[59/60]: <FAIL> https://www.u.tsukuba.ac.jp/wordpress/wp-content/uploads/note_usingcomputerrooms.png
+[60/60]: <NOW> https://web.archive.org/web/20200412022640/https://www.u.tsukuba.ac.jp/
 [+]FIN!: https://www.u.tsukuba.ac.jp
-[+]ALL: 87 SAVE: 61 FAIL: 21
+[+]ALL: 60 SAVE: 57 FAIL: 3
 [+]To exit, use CTRL+C or type 'end'
 [[Input a target url (ex: https://google.com)]]
 >>> exit
+[+]End.
 $
 ```
 
@@ -86,20 +81,26 @@ $
 ```bash
 $ wbsv https://tsumanne.net https://tsumanne.net/ct
 [+]Now: https://tsumanne.net
-9 URI(s) found.
-[1]: <NOW> https://web.archive.org/web/20200123194439/https://tsumanne.net
-...
-[9]: <FAIL> https://tsumanne.net/src/iphone.png
+[+]4 URI(s) found.
+[1/4]: <NOW> https://web.archive.org/web/20200412022931/https://tsumanne.net/si/
+[2/4]: <NOW> https://web.archive.org/web/20200412022935/https://tsumanne.net/
+[3/4]: <NOW> https://web.archive.org/web/20200412022938/https://tsumanne.net/my/
+[4/4]: <NOW> https://web.archive.org/web/20200412022949/https://tsumanne.net/ct/
 [+]FIN!: https://tsumanne.net
-[+]ALL: 9 SAVE: 5 FAIL: 4
+[+]ALL: 4 SAVE: 4 FAIL: 0
 [+]Now: https://tsumanne.net/ct
-7 URI(s) found.
-[1]: <NOW> https://web.archive.org/web/20200123194602/https://tsumanne.net/ct/?cat=&of=25
-...
-[7]: <FAIL> https://tsumanne.net/src/site.js
+[+]3 URI(s) found.
+[1/3]: <NOW> https://web.archive.org/web/20200412022958/https://tsumanne.net/
+[2/3]: <NOW> https://web.archive.org/web/20200412023000/https://tsumanne.net/oa_login.php
+[3/3]: <NOW> https://web.archive.org/web/20200412023012/https://tsumanne.net/ct/?cat=&of=25
 [+]FIN!: https://tsumanne.net/ct
-[+]ALL: 7 SAVE: 5 FAIL: 2
+[+]ALL: 3 SAVE: 3 FAIL: 0
 $
+```
+
+### Search links recurcively
+```bash
+$ wbsv -L2 https://programming-place.net/ppp/contents/c/index.html
 ```
 
 ### Increase limit of retry

@@ -79,7 +79,6 @@ def find_uri(url):
     return remove_useless(uris_misc)
 
 
-# oldname: extract_uri
 def extract_uri_recursive(url, rec):
   """
   Extract uri links from a page.
@@ -103,13 +102,11 @@ def extract_uri_recursive(url, rec):
     search_queue.append([i for i in add_dic if is_page(i)])
   return uri_dic
 
-def archive(uri_dic, pageurl, RETRY, ONLYPAGE):
+def archive(uri_dic, pageurl, RETRY):
   """
   Save URIs extracted from the target page.
   (by using Module savepagenow)
   """
-  if ONLYPAGE:
-    uri_dic = {i for i in uri_dic if is_page(i)}
 
   print("[+]Now: %s"%pageurl)
   print("[+]%d URI(s) found."%len(uri_dic))
