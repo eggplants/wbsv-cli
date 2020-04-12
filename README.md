@@ -50,8 +50,6 @@ Options:
     -r, --retry <times>         Set a retry limit on failed save.
     -t, --only-target           Save just target webpage(s).
     -L, --level <depth>          Set maximum recursion depth.
-    -p, --only-page             Get only URIs that are considered web pages.
-                                (Exclude URIs of images, videos, css, js ...)
 ```
 
 ### Interactive mode

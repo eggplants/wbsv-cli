@@ -16,7 +16,6 @@ def parse_args():
           "errout":sys.stderr,
           "out":sys.stdout,
           "level":0,
-          "only-page":False,
         }
   args = sys.argv
   arg_str = "".join(args)
@@ -52,10 +51,6 @@ def parse_args():
   elif re.compile(r'^.*-(-level|L)').match(arg_str):
     print("[!]-L, --level option needs int.", file=sys.stderr)
     exit(1)
-
-  # -p, --only-page
-  if "-p" in args or "--only-page" in args:
-    param["only-page"] = True
 
 
   param["urls"] = [i for i in args if Archive.is_url(i)]
