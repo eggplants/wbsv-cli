@@ -1,6 +1,6 @@
 def show_help():
   """
-  show usage.
+  Show usage.
   """
 
   print('''\

@@ -33,3 +33,4 @@ coverage.xml
 *.cover
 .hypothesis/
 .py
+.vscode

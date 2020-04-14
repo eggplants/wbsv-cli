@@ -6,7 +6,7 @@ from . import Interact
 
 def main():
   """
-  main
+  Main
   """
 
   opt = ParseArgs.parse_args()  # parse optional arguments and get `opt`(type:dict)

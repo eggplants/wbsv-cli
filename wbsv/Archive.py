@@ -75,7 +75,7 @@ def find_uri(url):
     # change "relative" uri into "absolute" one
     uris_misc = {urljoin(url, i) for i in uris_misc}
     # exclude mailto:// or javascript:// ...
-    uris_misc = {i for i in uris_misc if is_valid_scheme(i)}
+    uris_misc = {i for i in uris_misc if is_valid_scheme(i) and is_page(i)}
     return remove_useless(uris_misc)
 
 
@@ -89,7 +89,7 @@ def extract_uri_recursive(url, rec):
   if rec == 0:
     uri_dic=find_uri(url)
   for lev in range(rec):
-    print("[+]LEVEL: %d" % lev)
+    print("[+]LEVEL: %d" % (lev + 1))
     add_dic = set()
     remain_count = 1
 
@@ -97,9 +97,9 @@ def extract_uri_recursive(url, rec):
       print("[+]REMAIN:%d/%d" % (remain_count, len(search_queue[-1])), end="\r")
       add_dic |= find_uri(url)
       remain_count += 1
-    print("[+]LEVEL: %d FINISHED!" % lev)
+    print("[+]LEVEL: %d FINISHED!" % (lev + 1))
     uri_dic |= add_dic
-    search_queue.append([i for i in add_dic if is_page(i)])
+    search_queue.append(add_dic)
   return uri_dic
 
 def archive(uri_dic, pageurl, RETRY):
