@@ -29,9 +29,7 @@ def find_uri(url):
     try:
         # print("->", url)
         html_source = urlopen(url)
-    except HTTPError:
-        return set()
-    except URLError:
+    except (HTTPError, URLError, UnicodeEncodeError):
         return set()
 
     html_source_charset = html_source.headers.get_content_charset(
