@@ -4,7 +4,7 @@ import textwrap
 
 from . import Archive
 
-__version__ = 'wbsv 0.1.7'
+__version__ = 'wbsv 0.1.8'
 
 
 def parse_args():
