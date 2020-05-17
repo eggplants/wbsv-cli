@@ -16,7 +16,7 @@ You can try this tool on Google Cloud Shell. (First, `sudo python3 -m pip instal
 
 ## DEMO
 
-![demo.gif](https://raw.githubusercontent.com/eggplants/wbsv-cli/master/demo.gif)
+![demo.gif](https://raw.githubusercontent.com/wiki/eggplants/wbsv-cli/demo.gif)
 
 ## Install
 
