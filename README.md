@@ -21,7 +21,7 @@ You can try this tool on Google Cloud Shell. (First, `sudo python3 -m pip instal
 ## Install
 
 ```bash
-$ pip install wbsv # Python3.0+
+$ python -m pip install wbsv # Python3.0+
 ```
 
 ## Run & Examples
@@ -29,27 +29,31 @@ $ pip install wbsv # Python3.0+
 ### Help
 
 ```bash
+$ wbsv -v
+wbsv 0.1.7
 $ wbsv -h
-wbsv 0.1.6
+usage: wbsv [-h] [-v] [-r cnt] [-t] [-L lv] [url [url ...]]
+
 CLI tool for save webpage on Wayback Machine forever.
 Save webpage and one's all URI(s) on Wayback Machine.
 
-Usage:
-    wbsv [options] <url1> <url2> ... <urln>
+positional arguments:
+  url                  Saving pages in order.
 
-Args:
-    <urls>                      Saving pages in order.
-    no arg                      Launch Interactive mode.
-                                (To quit interactive mode,
-                                 type "end", "exit", "exit()",
-                                 "break", "bye", ":q" or "finish".)
+optional arguments:
+  -h, --help           show this help message and exit
+  -v, --version        Show version and exit
+  -r cnt, --retry cnt  Set a retry limit on failed save.
+  -t, --only_target    Save just target webpage(s).
+  -L lv, --level lv    Set maximum recursion depth.
 
-Options:
-    -h, --help                  Show help and exit.
-    -v, --version               Show version and exit.
-    -r, --retry <times>         Set a retry limit on failed save.
-    -t, --only-target           Save just target webpage(s).
-    -L, --level <depth>          Set maximum recursion depth.
+additional information:
+    If you don't give the URL,
+    interactive mode will be launched.
+    (To quit interactive mode,
+     type "end", "exit", "exit()",
+     "break", "bye", ":q" or "finish".)
+
 ```
 
 ### Interactive mode
@@ -99,21 +103,25 @@ $
 ```
 
 ### Search links recurcively
+
 ```bash
-$ wbsv -L2 https://programming-place.net/ppp/contents/c/index.html
+$ wbsv https://programming-place.net/ppp/contents/c/index.html -L2
 ```
 
 ### Increase limit of retry
+
 ```bash
 $ wbsv https://tsumanne.net --retry 10
 ```
 
 ## VERSION
 
-`wbsv 0.1.6`
+`wbsv 0.1.7`
 
 ## LISENCE
+
 MIT
 
 ## Author
+
 eggplants (haruna)
