@@ -12,6 +12,7 @@ def iter_urls(opt):
         for x in opt["urls"]:
             Archive.archive(Find.extract_uri_recursive(x, opt["level"]),
                             x, opt["retry"])
+
     except KeyboardInterrupt:
         print("[!]Interrupted!", file=sys.stderr)
         print("[!]Halt.", file=sys.stderr)

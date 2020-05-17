@@ -14,10 +14,12 @@ def parse_args():
             print("[!]Err: num {} should be positive integer.".format(n),
                   file=sys.stderr)
             exit(1)
+
         elif int(n) < 1:
             print("[!]Err: num {} should be more than 0.".format(n),
                   file=sys.stderr)
             exit(1)
+
         return int(n)
     parser = argparse.ArgumentParser(
         prog='wbsv',
@@ -51,6 +53,7 @@ def parse_args():
     if args.url != urls:
         print("[!]invalid url format", file=sys.stderr)
         exit(1)
+
     param = {
         "retry": args.retry,
         "urls": urls,

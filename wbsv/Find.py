@@ -31,6 +31,7 @@ def find_uri(url):
     # extract elements containing of uri links in a page
     try:
         html_source = urlopen(url)
+
     except (HTTPError, URLError, UnicodeEncodeError):
         return set()
 
@@ -39,11 +40,10 @@ def find_uri(url):
 
     try:
         html_decoded = html_source.read().decode(
-            html_source_charset, 'ignore'
-        )
+            html_source_charset, 'ignore')
         uris_misc = BeautifulSoup(html_decoded, "html.parser").findAll(
-            ["a"]
-        )
+            ["a"])
+
     except IncompleteRead:
         uris_misc = []
 
@@ -62,17 +62,19 @@ def extract_uri_recursive(url, rec):
     search_queue = [[url]]
     if rec == 0:
         uri_dic = find_uri(url)
+
     for lev in range(rec):
         print("[+]LEVEL: %d" % (lev + 1))
         add_dic = set()
         remain_count = 1
-
         for url in search_queue[-1]:
             print("[+]REMAIN:%d/%d" %
                   (remain_count, len(search_queue[-1])), end="\r")
             add_dic |= find_uri(url)
             remain_count += 1
+
         print("[+]LEVEL: %d FINISHED!" % (lev + 1))
         uri_dic |= add_dic
         search_queue.append(add_dic)
+
     return uri_dic

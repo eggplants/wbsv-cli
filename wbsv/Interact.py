@@ -8,9 +8,11 @@ def get_input(v):
     try:
         if Archive.is_url(v):
             return v
+
         else:
             print("[!]This input is invalid.", file=sys.stderr)
             return ''
+
     except(EOFError, KeyboardInterrupt):
         print("\n[+]End.")
         exit(0)
@@ -27,8 +29,12 @@ def chk_url_cond(url, opt):
     else:
         try:
             dic = Find.extract_uri_recursive(url, opt["level"])
+
         except KeyboardInterrupt:
             dic = []
+            print("[!]Interrupted!", file=sys.stderr)
+            print("[!]Halt.", file=sys.stderr)
+
         Archive.archive(dic, url, opt["retry"])
 
 
