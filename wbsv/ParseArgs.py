@@ -7,20 +7,22 @@ from . import Archive
 __version__ = 'wbsv 0.2.0'
 
 
-def parse_args():
-    """Parse arguments."""
-    def natural_num(n):
-        if not n.isdecimal():
-            print("[!]Err: num {} should be positive integer.".format(n),
-                  file=sys.stderr)
-            exit(1)
-
-        elif int(n) < 1:
-            print("[!]Err: num {} should be more than 0.".format(n),
-                  file=sys.stderr)
-            exit(1)
+def natural_num(n):
+    """Judge whether numstr is positive or not."""
+    if not n.isdecimal():
+        print("[!]Err: num {} should be positive integer.".format(n),
+              file=sys.stderr)
+        exit(1)
+    elif int(n) < 1:
+        print("[!]Err: num {} should be more than 0.".format(n),
+              file=sys.stderr)
+        exit(1)
 
         return int(n)
+
+
+def parse_args():
+    """Parse arguments."""
     parser = argparse.ArgumentParser(
         prog='wbsv',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -37,7 +39,7 @@ def parse_args():
 
     parser.add_argument('url',  metavar='url', nargs='*',
                         help='Saving pages in order.')
-    parser.add_argument('-v', '--version', action='version',
+    parser.add_argument('-V', '--version', action='version',
                         version=__version__,
                         help='Show version and exit')
     parser.add_argument('-r', '--retry', default=3,

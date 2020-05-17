@@ -26,12 +26,14 @@ def show_err():
 
 
 def wait_min():
+    """Wait a minute."""
     for t in range(60):
         print("%d/60s" % t, end="\r", file=sys.stderr)
         time.sleep(1)
 
 
 def retry_ntime(ret, func, c, uri):
+    """Retry function given times."""
     for cnt in range(ret):
         if func:
             return True
@@ -43,6 +45,7 @@ def retry_ntime(ret, func, c, uri):
 
 
 def add_res(func, t, f):
+    """Increment t or f by func bool."""
     return [t+1, f] if func else [t, f+1]
 
 
