@@ -1,5 +1,4 @@
 import re
-import random
 import sys
 import time
 
@@ -26,39 +25,59 @@ def show_err():
         print(err_msg, file=sys.stderr)
 
 
+def wait_min():
+    for t in range(60):
+        print("%d/60s" % t, end="\r", file=sys.stderr)
+        time.sleep(1)
+
+
+def retry_ntime(ret, func, s, d, uri):
+    for cnt in range(ret):
+        if func:
+            return True
+        else:
+            print("[%s/%d]: Retrying..." % (s, d),
+                  "COUNT:%d" % (cnt + 1), end="\r")
+    print("[%s/%d]:" % (s, d), "<FAIL> %s" % uri)
+    return False
+
+
+def add_res(func, t, f):
+    return [t+1, f] if func else [t, f+1]
+
+
+def try_archive(id, dic_size, uri):
+    try:
+        print("[%s/%d]: Wait...    " % (id, dic_size), end="\r")
+        archive_uri, exist_f = capture_or_cache(uri)
+        print("[%s/%d]:" % (id, dic_size), end=" ")
+        print("<%s>" % "NOW" if exist_f else "PAST", archive_uri)
+        return True
+
+    except WaybackRuntimeError:
+        return False
+
+
 def archive(uri_dic, pageurl, RETRY):
     """Save URIs extracted from the target page."""
     print("[+]Now: %s" % pageurl)
     print("[+]%d URI(s) found." % len(uri_dic))
     # try to throw each uri to API
     count, saves, fails = 0, 0, 0
-    dic_size = len(uri_dic)
-
     for uri in uri_dic:
         count += 1
-
+        # count uri_dic RETRY
         id_ = str(count).zfill(len(str(len(uri_dic))))
 
         try:
-            for j in range(1, RETRY+1):
-                try:
-                    print("[%s/%d]: Wait...    " % (id_, dic_size), end="\r")
-                    archive_uri, exist_f = capture_or_cache(uri)
-                    print("[%s/%d]:" % (id_, dic_size), end=" ")
-                    print("<%s>" % "NOW" if exist_f else "PAST", archive_uri)
-                    saves += 1
-                    break
+            saves, falis = add_res(
+                retry_ntime(RETRY,
+                            try_archive(id_, len(uri_dic), uri),
+                            id_,
+                            len(uri_dic),
+                            uri),
+                saves, fails)
 
-                except WaybackRuntimeError:
-                    if j != RETRY:
-                        print("[%s/%d]: Retrying..." %
-                              (id_, dic_size), "COUNT:%d" % j, end="\r")
-                    else:
-                        print("[%s/%d]:" % (id_, dic_size), "<FAIL> %s" % uri)
-                        fails += 1
-                finally:
-                    # wait retrying
-                    time.sleep(random.uniform(1, 3))
         except KeyboardInterrupt:
             print("[!]Interrupted!", file=sys.stderr)
             print("[!]Halt.", file=sys.stderr)
@@ -67,9 +86,7 @@ def archive(uri_dic, pageurl, RETRY):
         except TooManyRedirects:
             print("[!]API says: TooManyRedirects!", file=sys.stderr)
             print("[!]Need a 1 min break...", file=sys.stderr)
-            for t in range(60):
-                print("%d/60s" % t, end="\r", file=sys.stderr)
-                time.sleep(1)
+            wait_min()
 
     # after for-loop
     print("[+]FIN!: %s" % pageurl)
