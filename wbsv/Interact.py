@@ -1,5 +1,6 @@
 import sys
 from . import Archive
+from . import Find
 
 
 def interactive(opt):
@@ -17,7 +18,7 @@ def interactive(opt):
             if opt["only-target"]:
                 Archive.archive([url], url, opt["retry"])
             else:
-                Archive.archive(Archive.extract_uri_recursive(
+                Archive.archive(Find.extract_uri_recursive(
                     url, opt["level"]),
                     url, opt["retry"])
                 print("[+]To exit, use CTRL+C or type 'end'")
