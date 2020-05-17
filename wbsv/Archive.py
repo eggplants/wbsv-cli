@@ -117,7 +117,6 @@ def extract_uri_recursive(url, rec):
 def archive(uri_dic, pageurl, RETRY):
     """
     Save URIs extracted from the target page.
-    (by using Module savepagenow)
     """
 
     print("[+]Now: %s" % pageurl)
