@@ -25,7 +25,10 @@ def chk_url_cond(url, opt):
         Archive.archive([url], url, opt["retry"])
 
     else:
-        dic = Find.extract_uri_recursive(url, opt["level"])
+        try:
+            dic = Find.extract_uri_recursive(url, opt["level"])
+        except KeyboardInterrupt:
+            dic = []
         Archive.archive(dic, url, opt["retry"])
 
 
