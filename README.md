@@ -21,7 +21,7 @@ You can try this tool on Google Cloud Shell. (First, `sudo python3 -m pip instal
 ## Install
 
 ```bash
-$ python -m pip install wbsv # Python3.0+
+$ python -m pip install wbsv
 ```
 
 ## Run & Examples
@@ -29,10 +29,10 @@ $ python -m pip install wbsv # Python3.0+
 ### Help
 
 ```bash
-$ wbsv -v
+$ wbsv -V
 wbsv 0.2.0
 $ wbsv -h
-usage: wbsv [-h] [-v] [-r cnt] [-t] [-L lv] [url [url ...]]
+usage: wbsv [-h] [-V] [-r cnt] [-t] [-L lv] [url [url ...]]
 
 CLI tool for save webpage on Wayback Machine forever.
 Save webpage and one's all URI(s) on Wayback Machine.
@@ -42,7 +42,7 @@ positional arguments:
 
 optional arguments:
   -h, --help           show this help message and exit
-  -v, --version        Show version and exit
+  -V, --version        Show version and exit
   -r cnt, --retry cnt  Set a retry limit on failed save.
   -t, --only_target    Save just target webpage(s).
   -L lv, --level lv    Set maximum recursion depth.

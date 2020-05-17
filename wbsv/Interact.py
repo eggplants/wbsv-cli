@@ -5,6 +5,7 @@ from . import Find
 
 
 def get_input(v):
+    """Get a REPL input."""
     try:
         if Archive.is_url(v):
             return v
@@ -19,6 +20,7 @@ def get_input(v):
 
 
 def chk_url_cond(url, opt):
+    """Change a behavior according to options."""
     if Archive.is_end(url):
         print("[+]End.")
         exit(0)
