@@ -2,7 +2,7 @@ import re
 import sys
 import time
 
-from requests.exceptions import TooManyRedirects
+from requests.exceptions import TooManyRedirects, ConnectionError
 
 from savepagenow import capture_or_cache
 from savepagenow.api import WaybackRuntimeError
@@ -50,6 +50,7 @@ def add_res(func, t, f):
 
 
 def try_archive(id_, dic_size, uri):
+    """Try to save a page on Wayback Machine."""
     try:
         print("[%s/%d]: Wait...    " % (id_, dic_size), end="\r")
         archive_uri, exist_f = capture_or_cache(uri)
@@ -85,8 +86,8 @@ def archive(uri_dic, pageurl, RETRY):
             print("[!]Halt.", file=sys.stderr)
             break
 
-        except TooManyRedirects:
-            print("[!]API says: TooManyRedirects!", file=sys.stderr)
+        except (TooManyRedirects, ConnectionError) as e:
+            print("[!]API says: " + str(type(e)), file=sys.stderr)
             print("[!]Need a 1 min break...", file=sys.stderr)
             wait_min()
 
