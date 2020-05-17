@@ -31,14 +31,14 @@ def wait_min():
         time.sleep(1)
 
 
-def retry_ntime(ret, func, s, d, uri):
+def retry_ntime(ret, func, c, uri):
     for cnt in range(ret):
         if func:
             return True
         else:
-            print("[%s/%d]: Retrying..." % (s, d),
+            print("[%s/%d]: Retrying..." % (c[0], c[1]),
                   "COUNT:%d" % (cnt + 1), end="\r")
-    print("[%s/%d]:" % (s, d), "<FAIL> %s" % uri)
+    print("[%s/%d]:" % (c[0], c[1]), "<FAIL> %s" % uri)
     return False
 
 
@@ -46,11 +46,11 @@ def add_res(func, t, f):
     return [t+1, f] if func else [t, f+1]
 
 
-def try_archive(id, dic_size, uri):
+def try_archive(id_, dic_size, uri):
     try:
-        print("[%s/%d]: Wait...    " % (id, dic_size), end="\r")
+        print("[%s/%d]: Wait...    " % (id_, dic_size), end="\r")
         archive_uri, exist_f = capture_or_cache(uri)
-        print("[%s/%d]:" % (id, dic_size), end=" ")
+        print("[%s/%d]:" % (id_, dic_size), end=" ")
         print("<%s>" % "NOW" if exist_f else "PAST", archive_uri)
         return True
 
@@ -70,11 +70,10 @@ def archive(uri_dic, pageurl, RETRY):
         id_ = str(count).zfill(len(str(len(uri_dic))))
 
         try:
-            saves, falis = add_res(
+            saves, fails = add_res(
                 retry_ntime(RETRY,
                             try_archive(id_, len(uri_dic), uri),
-                            id_,
-                            len(uri_dic),
+                            (id_, len(uri_dic)),
                             uri),
                 saves, fails)
 
