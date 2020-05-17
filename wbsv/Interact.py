@@ -9,13 +9,13 @@ def get_input(v):
             return v
         else:
             print("[!]This input is invalid.", file=sys.stderr)
-            return false
+            return ''
     except(EOFError, KeyboardInterrupt):
         print("\n[+]End.")
         exit(0)
 
 
-def chk_url_cond(url):
+def chk_url_cond(url, opt):
     if Archive.is_end(url):
         print("[+]End.")
         exit(0)
@@ -35,4 +35,4 @@ def interactive(opt):
         print("[[Input a target url (ex: https://google.com)]]")
         url = get_input(input(">>> "))
         if not url:
-            chk_url_cond(url)
+            chk_url_cond(url, opt)
