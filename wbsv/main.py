@@ -4,8 +4,7 @@ from . import Interact
 
 
 def main():
-    """Main"""
-
+    """Main function."""
     opt = ParseArgs.parse_args()
 
     if len(opt["urls"]) == 0:

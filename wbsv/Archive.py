@@ -43,7 +43,6 @@ def is_valid_scheme(url):
 
 def show_err():
     """Print error texts without stopping process in error."""
-
     for err in list(sys.exc_info()):
         err_msg = "[!]%s" % str(err).strip("<>")
         print(err_msg, file=sys.stderr)
@@ -82,7 +81,6 @@ def find_uri(url):
 
 def extract_uri_recursive(url, rec):
     """Extract uri links from a page."""
-
     uri_dic = {url}
     search_queue = [[url]]
     if rec == 0:
@@ -105,7 +103,6 @@ def extract_uri_recursive(url, rec):
 
 def archive(uri_dic, pageurl, RETRY):
     """Save URIs extracted from the target page."""
-
     print("[+]Now: %s" % pageurl)
     print("[+]%d URI(s) found." % len(uri_dic))
     # try to throw each uri to API
