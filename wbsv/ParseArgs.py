@@ -47,13 +47,10 @@ def parse_args():
                         type=natural_num, metavar='lv',
                         help='Set maximum recursion depth.')
     args = parser.parse_args()
-    urls = []
-    for i in args.url:
-        if Archive.is_url(i):
-            urls.append(i)
-        else:
-            print("[!]invalid url format: {}".format(i), file=sys.stderr)
-            exit(1)
+    urls = [i for i in args.url if Archive.is_url(i)]
+    if args.url != urls:
+        print("[!]invalid url format", file=sys.stderr)
+        exit(1)
     param = {
         "retry": args.retry,
         "urls": urls,
