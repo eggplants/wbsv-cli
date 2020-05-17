@@ -1,4 +1,3 @@
-# Built-in Module
 import re
 import random
 import sys
@@ -6,12 +5,8 @@ import time
 
 from requests.exceptions import TooManyRedirects
 
-# Third-parties' Module
 from savepagenow import capture_or_cache
 from savepagenow.api import WaybackRuntimeError
-
-# local Module
-# from . import Version
 
 
 def is_url(url):
