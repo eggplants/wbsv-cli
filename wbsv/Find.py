@@ -1,5 +1,6 @@
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
+from http.client import IncompleteRead
 
 from bs4 import BeautifulSoup
 
@@ -20,26 +21,32 @@ def is_valid_scheme(url):
     return urlparse(url).scheme in ["ftp", "gopher", "http", "https"]
 
 
+def remove_useless(l):
+    """Remove not available data from list."""
+    return {x for x in l if x is not None and len(x) > 1}
+
+
 def find_uri(url):
     """Find links in page."""
-    def remove_useless(l):
-        """Remove not available data from list."""
-        return {x for x in l if x is not None and len(x) > 1}
     # extract elements containing of uri links in a page
     try:
-        # print("->", url)
         html_source = urlopen(url)
     except (HTTPError, URLError, UnicodeEncodeError):
         return set()
 
     html_source_charset = html_source.headers.get_content_charset(
         failobj="utf-8")
-    html_decoded = html_source.read().decode(
-        html_source_charset, 'ignore'
-    )
-    uris_misc = BeautifulSoup(html_decoded, "html.parser").findAll(
-        ["a"]
-    )
+
+    try:
+        html_decoded = html_source.read().decode(
+            html_source_charset, 'ignore'
+        )
+        uris_misc = BeautifulSoup(html_decoded, "html.parser").findAll(
+            ["a"]
+        )
+    except IncompleteRead:
+        uris_misc = []
+
     # extract uri link data
     uris_misc = sum([[i.get("href")] for i in uris_misc], [])
     # change "relative" uri into "absolute" one
