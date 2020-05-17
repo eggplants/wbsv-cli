@@ -4,9 +4,7 @@ from . import Interact
 
 
 def main():
-    """
-    Main
-    """
+    """Main"""
 
     opt = ParseArgs.parse_args()
 

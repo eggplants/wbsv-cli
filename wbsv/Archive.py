@@ -18,23 +18,17 @@ from savepagenow.api import WaybackRuntimeError
 
 
 def is_url(url):
-    """
-    Judge whether str is url or not.
-    """
+    """Judge whether str is url or not."""
     return re.compile(r'^(http|https)://').match(url)
 
 
 def is_end(url):
-    """
-    Judge whether str is the fin command to quit interactive mode or not.
-    """
+    """Judge whether str is the fin cmd to quit interactive mode."""
     return re.compile(r'^(end|exit|exit\(\)|break|bye|:q|finish)$').match(url)
 
 
 def is_page(url):
-    """
-    Judge whether str is webpage or not
-    """
+    """Judge whether str is webpage."""
     exclude_suffixes = (".css", ".gif", ".jpeg", ".jpg",
                         ".js", ".json", ".png", ".svg")
     url_parts = urlparse(url)
@@ -43,16 +37,12 @@ def is_page(url):
 
 
 def is_valid_scheme(url):
-    """
-    Judge whether url is valid scheme or not
-    """
+    """Judge whether url is valid scheme."""
     return urlparse(url).scheme in ["ftp", "gopher", "http", "https"]
 
 
 def show_err():
-    """
-    Print error texts without stopping process when happening some error.
-    """
+    """Print error texts without stopping process in error."""
 
     for err in list(sys.exc_info()):
         err_msg = "[!]%s" % str(err).strip("<>")
@@ -60,8 +50,9 @@ def show_err():
 
 
 def find_uri(url):
-    # remove not available data from list
+    """Find links in page."""
     def remove_useless(l):
+        """Remove not available data from list."""
         return {x for x in l if x is not None and len(x) > 1}
     # extract elements containing of uri links in a page
     try:
@@ -90,9 +81,7 @@ def find_uri(url):
 
 
 def extract_uri_recursive(url, rec):
-    """
-    Extract uri links from a page.
-    """
+    """Extract uri links from a page."""
 
     uri_dic = {url}
     search_queue = [[url]]
@@ -115,9 +104,7 @@ def extract_uri_recursive(url, rec):
 
 
 def archive(uri_dic, pageurl, RETRY):
-    """
-    Save URIs extracted from the target page.
-    """
+    """Save URIs extracted from the target page."""
 
     print("[+]Now: %s" % pageurl)
     print("[+]%d URI(s) found." % len(uri_dic))

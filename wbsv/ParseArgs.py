@@ -8,9 +8,7 @@ __version__ = 'wbsv 0.1.7'
 
 
 def parse_args():
-    """
-    Parse arguments.
-    """
+    """Parse arguments."""
     def natural_num(n):
         if not n.isdecimal():
             print("[!]Err: num {} should be positive integer.".format(n),

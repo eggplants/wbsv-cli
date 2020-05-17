@@ -3,10 +3,7 @@ from . import Archive
 
 
 def interactive(opt):
-    """
-    Interactive mode like shell.
-    """
-    # print(opt) #show flags for debugging...
+    """Interactive mode like shell."""
 
     while True:
         print("[[Input a target url (ex: https://google.com)]]")
