@@ -9,17 +9,18 @@ def main():
 
     if len(opt["urls"]) == 0:
         Interact.interactive(opt)
+        exit(0)
 
     elif opt["only-target"]:
-        for x in opt["urls"]:
-            Archive.archive([x], x, opt["retry"])
+        [Archive.archive([x], x, opt["retry"]) for x in opt["urls"]]
+        exit(0)
+
     else:
         for x in opt["urls"]:
-            Archive.archive(Archive.extract_uri_recursive(
-                x, opt["level"]), x, opt["retry"])
+            dic = Archive.extract_uri_recursive(x, opt["level"])
+            Archive.archive(dic, x, opt["retry"])
 
-    # if no errors occurred ...
-    exit(0)
+        exit(0)
 
 
 if __name__ == "__main__":
