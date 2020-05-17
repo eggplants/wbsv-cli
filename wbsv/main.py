@@ -1,4 +1,5 @@
 from . import Archive
+from . import Find
 from . import ParseArgs
 from . import Interact
 
@@ -9,7 +10,6 @@ def main():
 
     if len(opt["urls"]) == 0:
         Interact.interactive(opt)
-        exit(0)
 
     elif opt["only-target"]:
         [Archive.archive([x], x, opt["retry"]) for x in opt["urls"]]
@@ -17,7 +17,7 @@ def main():
 
     else:
         for x in opt["urls"]:
-            dic = Archive.extract_uri_recursive(x, opt["level"])
+            dic = Find.extract_uri_recursive(x, opt["level"])
             Archive.archive(dic, x, opt["retry"])
 
         exit(0)
