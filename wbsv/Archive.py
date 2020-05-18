@@ -2,7 +2,7 @@ import re
 import sys
 import time
 
-from requests.exceptions import TooManyRedirects, ConnectionError
+from requests.exceptions import ConnectionError, TooManyRedirects, HTTPError
 
 from savepagenow import capture_or_cache
 from savepagenow.api import WaybackRuntimeError
@@ -86,7 +86,7 @@ def archive(uri_dic, pageurl, RETRY):
             print("[!]Halt.", file=sys.stderr)
             break
 
-        except (TooManyRedirects, ConnectionError) as e:
+        except (ConnectionError, TooManyRedirects, HTTPError) as e:
             print("[!]API says: " + str(type(e)), file=sys.stderr)
             print("[!]Need a 1 min break...", file=sys.stderr)
             wait_min()
