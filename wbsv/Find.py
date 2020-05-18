@@ -1,6 +1,7 @@
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 from http.client import IncompleteRead
+import sys
 
 from bs4 import BeautifulSoup
 
@@ -32,7 +33,8 @@ def find_uri(url):
     try:
         html_source = urlopen(url)
 
-    except (HTTPError, URLError, UnicodeEncodeError):
+    except (HTTPError, URLError, UnicodeEncodeError) as e:
+        print("[!]" + str(type(e)), file=sys.stderr)
         return set()
 
     html_source_charset = html_source.headers.get_content_charset(
