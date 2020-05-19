@@ -1,6 +1,8 @@
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 from http.client import IncompleteRead
+from random import randint
+import time
 
 from bs4 import BeautifulSoup
 
@@ -73,11 +75,16 @@ class Finder:
         if depth==0 :
             self.urls.add(url)
             return 
+        elif depth==1 :
+            self.urls |= self.find_uri(url)
+            return
         else:
             included_urls = self.find_uri(url)
             for l in included_urls :
                 self.extract_uri_recursive(l, depth-1)
-        
+                time.sleep(randint(2,5))
+    
+
     def find_and_archive(self, url, archiver):
         self.extract_uri_recursive(url, 1)
         for l in self.urls :

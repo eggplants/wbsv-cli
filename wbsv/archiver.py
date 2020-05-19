@@ -2,7 +2,7 @@ import re
 import sys
 import time
 
-from random import random
+from random import random, randint
 
 from requests.exceptions import TooManyRedirects
 
@@ -40,7 +40,8 @@ class AbstractArchiver():
                 return True
             else:
                 print("failed: "+str(i))
-
+                time.sleep(randint(2,10))
+            
         return False
     
     def add_result(self, result):
@@ -54,10 +55,7 @@ class AbstractArchiver():
         print("SAVE:", self.save_count, "FAIL:", self.fail_count)
     
 class Archiver(AbstractArchiver):
-    def try_archive(self, id_, dic_size, uri):
-        pass
-
-    def archive(self, url):
+    def try_archive(self, url):
         pass
 
 class RandomArchiver(AbstractArchiver):
