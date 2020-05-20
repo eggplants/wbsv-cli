@@ -18,6 +18,16 @@ class Interactive:
         """Judge whether str is url or not."""
         return re.compile(r'\A(http|https)://').match(url)
 
+    def judge_str(self, str):
+        if self.is_end(str):
+            print("[+]End.")
+            exit(0)
+        elif self.is_url(str):
+            self.finder.find_and_archive(str, self.archiver)
+            self.finder.print_result()
+        else:
+            print("[!]This input is invalid.", file=sys.stderr)
+        
     
     def run(self):
         """Interactive mode like shell."""
@@ -28,16 +38,9 @@ class Interactive:
             
             try:
                 str = input(">>> ")
+                self.judge_str(str)
             except(EOFError, KeyboardInterrupt):
                 print("\n[+]End.")
                 exit(0)
             
-            if self.is_end(str):
-                print("[+]End.")
-                exit(0)
-            elif self.is_url(str):
-                self.finder.find_and_archive(str, self.archiver)
-                self.finder.print_result()
-            else:
-                print("[!]This input is invalid.", file=sys.stderr)
             
