@@ -22,12 +22,10 @@ class AbstractArchiver():
         pass
 
     def archive(self, url):
+        print("Saving: "+url)
         result = self.retry_ntimes( self.try_archive, [url] )
         self.add_result(result)
-      
-    def is_url(self, url):
-        """Judge whether str is url or not."""
-        return re.compile(r'\A(http|https)://').match(url)
+        print( ("Saved: " if result else "Failed: ")+url)
 
     def wait_min(self):
         for t in range(60):
@@ -39,7 +37,7 @@ class AbstractArchiver():
             if func(*args):
                 return True
             else:
-                print("failed: "+str(i))
+                print("fail: "+str(i+1))
                 time.sleep(randint(2,10))
             
         return False
@@ -56,17 +54,21 @@ class AbstractArchiver():
     
 class Archiver(AbstractArchiver):
     def try_archive(self, url):
-        pass
+        try:
+            #print("[%s/%d]: Wait...    " % (id_, dic_size), end="\r")
+            archive_uri, exist_f = capture_or_cache(url)
+            #print("[%s/%d]:" % (id_, dic_size), end=" ")
+            print("<%s>" % "NOW" if exist_f else "PAST", archive_uri)
+            return True
+
+        except WaybackRuntimeError:
+            return False
 
 class RandomArchiver(AbstractArchiver):
-    #def __init__(self):
-        #super().__init__()
-
+    
     def try_archive(self, url):
         if random() > 0.5 :
-            print("Archived: "+url)
             return True
         else:
-            print("Archive Failed: "+url)
             return False
         
