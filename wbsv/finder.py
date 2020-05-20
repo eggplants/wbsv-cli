@@ -21,12 +21,12 @@ class Finder:
     def print_result(self):
         print("Fetched:", len(self.fetched_urls), "URLs, ",
             "Found:", len(self.urls), "URLs")
-    
+
     def parse_opt(self, opt):
         self.search_url_depth = opt["level"]
         if opt["only-target"] :
             self.search_url_depth = 0
-        
+
     @staticmethod
     def is_page(url):
         """Judge whether str is webpage."""
