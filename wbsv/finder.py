@@ -14,8 +14,7 @@ class Finder:
         #self.url = ""
         self.urls = set()
         self.fetched_urls = set()
-        pass
-    
+
     def clean(self):
         self.urls = set()
     
@@ -40,7 +39,6 @@ class Finder:
     def is_valid_scheme(self, url):
         """Judge whether url is valid scheme."""
         return urlparse(url).scheme in ["ftp", "gopher", "http", "https"]
-
 
     def remove_useless(self, l):
         """Remove not available data from list."""
@@ -85,7 +83,7 @@ class Finder:
         # to exit extracting URL, Listen KeyboardInterrupt arround this method.
         if depth==0 :
             self.urls.add(url)
-            return 
+            return
         elif depth==1 :
             self.urls |= self.find_uri(url)
             return

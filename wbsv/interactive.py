@@ -3,12 +3,12 @@ import re
 
 class Interactive:
     def __init__(self, finder, archiver):
+        """initialize"""
         self.finder = finder
         self.archiver = archiver
-    
+
     def parse_opt(self, opt):
         self.only_target = opt["only-target"]
-
 
     def is_end(self, str):
         """Judge whether str is the fin cmd to quit interactive mode."""
@@ -42,5 +42,3 @@ class Interactive:
             except(EOFError, KeyboardInterrupt):
                 print("\n[+]End.")
                 exit(0)
-            
-            

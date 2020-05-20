@@ -15,13 +15,13 @@ def collect_archiver(opt):
 def main():
     """Main function."""
     opt = ParseArgs.parse_args()
-    
+
     archiver = collect_archiver(opt)
     finder = Finder()
 
     archiver.parse_opt(opt)
     finder.parse_opt(opt)
-    
+
     if len(opt["urls"]) == 0:
         interact = Interactive(finder, archiver)
         interact.parse_opt(opt)

@@ -1,10 +1,7 @@
-import re
 import sys
 import time
 
 from random import random, randint
-
-from requests.exceptions import TooManyRedirects
 
 from savepagenow import capture_or_cache
 from savepagenow.api import WaybackRuntimeError
@@ -12,9 +9,10 @@ from savepagenow.api import WaybackRuntimeError
 
 class AbstractArchiver():
     def __init__(self):
+        """initializing"""
         self.save_count = 0
         self.fail_count = 0
-    
+
     def parse_opt(self, opt):
         self.retry = opt["retry"]
 
@@ -26,11 +24,6 @@ class AbstractArchiver():
         result = self.retry_ntimes( self.try_archive, [url] )
         self.add_result(result)
         print( ("Saved: " if result else "Failed: ")+url)
-
-    def wait_min(self):
-        for t in range(60):
-            print("%d/60s" % t, end="\r", file=sys.stderr)
-            time.sleep(1)
 
     def retry_ntimes(self, func, args=()):
         for i in range(self.retry):
