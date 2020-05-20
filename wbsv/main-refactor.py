@@ -1,42 +1,37 @@
 import sys
 
-from .archiver import RandomArchiver
+from .archiver import RandomArchiver, Archiver
 from .finder import Finder
 from . import ParseArgs
-from . import Interact
-
-
-def iter_urls(finder, archiver, opt):
-    """Iterate given urls for saving."""
-    try:
-        for url in opt["urls"]:
-            finder.find_and_archive(url, archiver)
-            #Archive.archive(Find.extract_uri_recursive(x, opt["level"]),
-            #                x, opt["retry"])
-    except KeyboardInterrupt:
-        print("[!]Interrupted!", file=sys.stderr)
-        print("[!]Halt.", file=sys.stderr)
-        exit(1)
-
+from .interactive import Interactive
 
 def main():
     """Main function."""
     opt = ParseArgs.parse_args()
-    archiver = RandomArchiver()
+    
+    if opt["dry-run"] :
+        archiver = RandomArchiver()
+    else:
+        archiver = Archiver()
+    
     finder = Finder()
 
     archiver.parse_opt(opt)
     finder.parse_opt(opt)
     
     if len(opt["urls"]) == 0:
-        Interact.interactive(opt)
-
-    elif opt["only-target"]:
-        [archiver.archive(x) for x in opt["urls"]]
-        exit(0)
+        interact = Interactive(finder, archiver)
+        interact.parse_opt(opt)
+        interact.run()
 
     else:
-        iter_urls(finder, archiver, opt)
+        try:
+            [finder.find_and_archive(x, archiver) for x in opt["urls"]]
+        except KeyboardInterrupt:
+            print("[!]Interrupted!", file=sys.stderr)
+            print("[!]Halt.", file=sys.stderr)
+            exit(1)
+
         archiver.print_result()
         exit(0)
 
