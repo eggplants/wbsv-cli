@@ -16,8 +16,18 @@ class Finder:
         self.fetched_urls = set()
         pass
     
+    def clean(self):
+        self.urls = set()
+    
+    def print_result(self):
+        print("Fetched:", len(self.fetched_urls), "URLs, ",
+            "Found:", len(self.urls), "URLs")
+    
     def parse_opt(self, opt):
-        pass
+        self.search_url_depth = opt["level"]
+        if opt["only-target"] :
+            self.search_url_depth = 0
+        
 
     def is_page(self, url):
         """Judge whether str is webpage."""
@@ -45,6 +55,7 @@ class Finder:
             self.fetched_urls.add(url)
         
         try:
+            print("Fetching: "+url)
             html_source = urlopen(url)
         except (HTTPError, URLError, UnicodeEncodeError):
             return set()
@@ -70,8 +81,8 @@ class Finder:
         uris_misc = {i for i in uris_misc if self.is_valid_scheme(i) and self.is_page(i)}
         return self.remove_useless(uris_misc)
 
-
     def extract_uri_recursive(self, url, depth):
+        # to exit extracting URL, Listen KeyboardInterrupt arround this method.
         if depth==0 :
             self.urls.add(url)
             return 
@@ -83,10 +94,19 @@ class Finder:
             for l in included_urls :
                 self.extract_uri_recursive(l, depth-1)
                 time.sleep(randint(2,5))
-    
+
+            self.urls |= included_urls
 
     def find_and_archive(self, url, archiver):
-        self.extract_uri_recursive(url, 1)
-        for l in self.urls :
-            archiver.archive(l)
+        try:
+            self.extract_uri_recursive(url, self.search_url_depth)
+        except KeyboardInterrupt:
+            print("Interrupt: Stopped extracting url.")
+        
+        self.print_result()
 
+        try:
+            for l in self.urls :
+                archiver.archive(l)
+        except KeyboardInterrupt:
+            print("Interrupt: Stopped saving pages.")
