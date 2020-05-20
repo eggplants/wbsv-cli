@@ -17,7 +17,7 @@ class Finder:
 
     def clean(self):
         self.urls = set()
-    
+
     def print_result(self):
         print("Fetched:", len(self.fetched_urls), "URLs, ",
             "Found:", len(self.urls), "URLs")
@@ -27,8 +27,8 @@ class Finder:
         if opt["only-target"] :
             self.search_url_depth = 0
         
-
-    def is_page(self, url):
+    @staticmethod
+    def is_page(url):
         """Judge whether str is webpage."""
         exclude_suffixes = (".css", ".gif", ".jpeg", ".jpg",
                             ".js", ".json", ".png", ".svg")
@@ -36,11 +36,13 @@ class Finder:
         return not url_parts.fragment and not url_parts.path.endswith(
             exclude_suffixes)
 
-    def is_valid_scheme(self, url):
+    @staticmethod
+    def is_valid_scheme(url):
         """Judge whether url is valid scheme."""
         return urlparse(url).scheme in ["ftp", "gopher", "http", "https"]
 
-    def remove_useless(self, l):
+    @staticmethod
+    def remove_useless(l):
         """Remove not available data from list."""
         return {x for x in l if x is not None and len(x) > 1}
 

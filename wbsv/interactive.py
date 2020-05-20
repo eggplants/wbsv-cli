@@ -10,11 +10,13 @@ class Interactive:
     def parse_opt(self, opt):
         self.only_target = opt["only-target"]
 
-    def is_end(self, str):
+    @staticmethod
+    def is_end(str):
         """Judge whether str is the fin cmd to quit interactive mode."""
         return re.compile(r'^(end|exit|exit\(\)|break|bye|:q|finish)$').match(str)
 
-    def is_url(self, url):
+    @staticmethod
+    def is_url(url):
         """Judge whether str is url or not."""
         return re.compile(r'\A(http|https)://').match(url)
 
