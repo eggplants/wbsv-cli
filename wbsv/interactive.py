@@ -3,7 +3,7 @@ import re
 
 class Interactive:
     def __init__(self, finder, archiver):
-        """initialize"""
+        """initialize."""
         self.finder = finder
         self.archiver = archiver
 
@@ -27,15 +27,14 @@ class Interactive:
             self.finder.print_result()
         else:
             print("[!]This input is invalid.", file=sys.stderr)
-        
-    
+
     def run(self):
         """Interactive mode like shell."""
         print("[+]To exit, use CTRL+C or type 'end'")
-        
+
         while True:
             print("[[Input a target url (ex: https://google.com)]]")
-            
+
             try:
                 str = input(">>> ")
                 self.judge_str(str)

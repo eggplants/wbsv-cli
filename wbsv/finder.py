@@ -11,7 +11,7 @@ from urllib.parse import urlparse, urljoin
 
 class Finder:
     def __init__(self):
-        #self.url = ""
+        """initialize."""
         self.urls = set()
         self.fetched_urls = set()
 
@@ -51,7 +51,7 @@ class Finder:
             return set()
         else:
             self.fetched_urls.add(url)
-        
+
         try:
             print("Fetching: "+url)
             html_source = urlopen(url)
@@ -100,7 +100,7 @@ class Finder:
             self.extract_uri_recursive(url, self.search_url_depth)
         except KeyboardInterrupt:
             print("Interrupt: Stopped extracting url.")
-        
+
         self.print_result()
 
         try:

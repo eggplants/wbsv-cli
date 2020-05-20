@@ -1,4 +1,3 @@
-import sys
 import time
 
 from random import random, randint
@@ -9,7 +8,7 @@ from savepagenow.api import WaybackRuntimeError
 
 class AbstractArchiver():
     def __init__(self):
-        """initializing"""
+        """initialize."""
         self.save_count = 0
         self.fail_count = 0
 
@@ -32,19 +31,19 @@ class AbstractArchiver():
             else:
                 print("fail: "+str(i+1))
                 time.sleep(randint(2,10))
-            
+
         return False
-    
+
     def add_result(self, result):
         if result:
             self.save_count += 1
         else:
             self.fail_count += 1
-    
+
     def print_result(self):
         #print("[+]FIN!: %s" % pageurl)
         print("SAVE:", self.save_count, "FAIL:", self.fail_count)
-    
+
 class Archiver(AbstractArchiver):
     def try_archive(self, url):
         try:
@@ -58,10 +57,8 @@ class Archiver(AbstractArchiver):
             return False
 
 class RandomArchiver(AbstractArchiver):
-    
     def try_archive(self, url):
         if random() > 0.5 :
             return True
         else:
             return False
-        
