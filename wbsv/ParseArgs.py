@@ -46,6 +46,8 @@ def parse_args():
     parser.add_argument('-L', '--level', default=0,
                         type=natural_num, metavar='lv',
                         help='Set maximum recursion depth.')
+    parser.add_argument('-d', '--dry_run', action='store_true', default=False,
+                        help='Running without saving (dry-run mode)')
     args = parser.parse_args()
     urls = [i for i in args.url if Archive.is_url(i)]
     if args.url != urls:
@@ -55,6 +57,7 @@ def parse_args():
         "retry": args.retry,
         "urls": urls,
         "only-target": args.only_target,
+        "dry-run": args.dry_run,
         "errout": sys.stderr,
         "out": sys.stdout,
         "level": args.level}
