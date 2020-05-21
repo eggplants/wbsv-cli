@@ -30,8 +30,10 @@ def main():
 
     else:
         try:
-            [finder.find_and_archive(x, archiver) for x in opt["urls"]]
-            archiver.print_result()
+            for x in opt["urls"]:
+                finder.find_and_archive(x, archiver)
+                archiver.print_result(x)
+
         except KeyboardInterrupt:
             print("[!]Interrupted!", file=sys.stderr)
             print("[!]Halt.", file=sys.stderr)

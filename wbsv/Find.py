@@ -82,7 +82,7 @@ class Finder:
         return self.remove_useless(uris_misc)
 
     def extract_uri_recursive(self, url, depth):
-        # to exit extracting URL, Listen KeyboardInterrupt arround this method.
+        # To exit extracting URL, listen KeyboardInterrupt arround this method.
         if depth == 0:
             self.urls.add(url)
             return
@@ -107,6 +107,6 @@ class Finder:
 
         try:
             for l in self.urls:
-                archiver.archive(l, self.fetched_urls)
+                archiver.archive(l, self.urls)
         except KeyboardInterrupt:
             print("Interrupt: Stopped saving pages.")
