@@ -1,29 +1,30 @@
 import sys
 
-from .archiver import RandomArchiver, Archiver
-from .finder import Finder
+from . import Archive
+from . import Find
 from . import ParseArgs
-from .interactive import Interactive
+from . import Interact
 
 
 def collect_archiver(opt):
-    if opt["dry-run"] :
-        return RandomArchiver()
+    if opt["dry-run"]:
+        return Archive.RandomArchiver()
     else:
-        return Archiver()
+        return Archive.Archiver()
+
 
 def main():
     """Main function."""
     opt = ParseArgs.parse_args()
 
     archiver = collect_archiver(opt)
-    finder = Finder()
+    finder = Find.Finder()
 
     archiver.parse_opt(opt)
     finder.parse_opt(opt)
 
     if len(opt["urls"]) == 0:
-        interact = Interactive(finder, archiver)
+        interact = Interact.Interactive(finder, archiver)
         interact.parse_opt(opt)
         interact.run()
 

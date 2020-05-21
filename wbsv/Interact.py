@@ -1,50 +1,47 @@
 import sys
-
-from . import Archive
-from . import Find
+import re
 
 
-def get_input(v):
-    """Get a REPL input."""
-    try:
-        if Archive.is_url(v):
-            return v
+class Interactive:
+    def __init__(self, finder, archiver):
+        """initialize."""
+        self.finder = finder
+        self.archiver = archiver
 
+    def parse_opt(self, opt):
+        self.only_target = opt["only-target"]
+
+    @staticmethod
+    def is_end(str):
+        """Judge whether str is the fin cmd to quit interactive mode."""
+        pattern = r'^(end|exit|exit\(\)|break|bye|:q|finish)$'
+        return re.compile(pattern).match(str)
+
+    @staticmethod
+    def is_url(url):
+        """Judge whether str is url or not."""
+        return re.compile(r'\A(http|https)://').match(url)
+
+    def judge_str(self, str):
+        if self.is_end(str):
+            print("[+]End.")
+            exit(0)
+        elif self.is_url(str):
+            self.finder.find_and_archive(str, self.archiver)
+            self.finder.print_result()
         else:
             print("[!]This input is invalid.", file=sys.stderr)
-            return ''
 
-    except(EOFError, KeyboardInterrupt):
-        print("\n[+]End.")
-        exit(0)
+    def run(self):
+        """Interactive mode like shell."""
+        print("[+]To exit, use CTRL+C or type 'end'")
 
+        while True:
+            print("[[Input a target url (ex: https://google.com)]]")
 
-def chk_url_cond(url, opt):
-    """Change a behavior according to options."""
-    if Archive.is_end(url):
-        print("[+]End.")
-        exit(0)
-
-    elif opt["only-target"]:
-        Archive.archive([url], url, opt["retry"])
-
-    else:
-        try:
-            dic = Find.extract_uri_recursive(url, opt["level"])
-
-        except KeyboardInterrupt:
-            dic = []
-            print("[!]Interrupted!", file=sys.stderr)
-            print("[!]Halt.", file=sys.stderr)
-
-        Archive.archive(dic, url, opt["retry"])
-
-
-def interactive(opt):
-    """Interactive mode like shell."""
-    print("[+]To exit, use CTRL+C or type 'end'")
-    while True:
-        print("[[Input a target url (ex: https://google.com)]]")
-        url = get_input(input(">>> "))
-        if not url:
-            chk_url_cond(url, opt)
+            try:
+                str = input(">>> ")
+                self.judge_str(str)
+            except(EOFError, KeyboardInterrupt):
+                print("\n[+]End.")
+                exit(0)

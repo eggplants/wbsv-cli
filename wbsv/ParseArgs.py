@@ -3,6 +3,7 @@ import sys
 import textwrap
 
 from . import Archive
+from . import Interact
 
 __version__ = 'wbsv 0.2.0'
 
@@ -53,7 +54,7 @@ def parse_args():
     parser.add_argument('-d', '--dry_run', action='store_true', default=False,
                         help='Running without saving (dry-run mode)')
     args = parser.parse_args()
-    urls = [i for i in args.url if Archive.is_url(i)]
+    urls = [i for i in args.url if Interact.Interactive.is_url(i)]
     if args.url != urls:
         print("[!]invalid url format", file=sys.stderr)
         exit(1)

@@ -14,7 +14,7 @@ setup(
     install_requires=["beautifulsoup4", "savepagenow"],
     entry_points={
         "console_scripts": [
-            "wbsv=wbsv.main:main"
+            "wbsv=wbsv.Main:main"
         ]
     }
 )
