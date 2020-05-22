@@ -2,7 +2,7 @@ import argparse
 import sys
 import textwrap
 
-from . import Archive
+#from . import Archive
 from . import Interact
 
 __version__ = 'wbsv 0.2.0'
@@ -11,14 +11,12 @@ __version__ = 'wbsv 0.2.0'
 def natural_num(n):
     """Judge whether numstr is positive or not."""
     if not n.isdecimal():
-        print("[!]Err: num {} should be positive integer.".format(n),
-              file=sys.stderr)
-        exit(1)
-    elif int(n) < 1:
-        print("[!]Err: num {} should be more than 0.".format(n),
-              file=sys.stderr)
-        exit(1)
+        raise argparse.ArgumentTypeError("[!]Err: num {} should be positive integer.".format(n))
 
+    elif int(n) < 1:
+        raise argparse.ArgumentTypeError("[!]Err: num {} should be more than 0.".format(n))
+    
+    else:
         return int(n)
 
 
@@ -48,7 +46,7 @@ def parse_args():
                         help='Set a retry limit on failed save.')
     parser.add_argument('-t', '--only_target', action='store_true',
                         help='Save just target webpage(s).')
-    parser.add_argument('-L', '--level', default=0,
+    parser.add_argument('-L', '--level', default=0, dest="level",
                         type=natural_num, metavar='lv',
                         help='Set maximum recursion depth.')
     parser.add_argument('-d', '--dry_run', action='store_true', default=False,
@@ -58,7 +56,7 @@ def parse_args():
     if args.url != urls:
         print("[!]invalid url format", file=sys.stderr)
         exit(1)
-
+    print(args)
     param = {
         "retry": args.retry,
         "urls": urls,
