@@ -23,9 +23,9 @@ class AbstractArchiver():
         result = self.retry_ntimes(self.try_archive, url, url_dic)
         self.add_result(result)
 
-    def retry_ntimes(self, func, a1, a2):
+    def retry_ntimes(self, func, *args):
         for i in range(self.retry):
-            if func(a1, a2):
+            if func(*args):
                 return True
             else:
                 print("fail: "+str(i+1))
