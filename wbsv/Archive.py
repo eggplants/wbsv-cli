@@ -60,7 +60,7 @@ class Archiver(AbstractArchiver):
 
 
 class RandomArchiver(AbstractArchiver):
-    def try_archive(self, url):
+    def try_archive(self, url, url_dic):
         if random() > 0.5:
             return True
         else:
