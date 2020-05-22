@@ -49,11 +49,11 @@ def parse_args():
     parser.add_argument('-L', '--level', default=0,
                         type=natural_num, metavar='lv',
                         help='Set maximum recursion depth.')
-    parser.add_argument('-d', '--dry_run', action='store_false', default=False,
+    parser.add_argument('-d', '--dry_run', action='store_true',
                         help='Run without saving (dry-run mode)')
-    parser.add_argument('-f', '--fake_fetch', action='store_false', default=False,
+    parser.add_argument('-f', '--fake_fetch', action='store_true',
                         help='Run without page fetching.')
-    parser.add_argument('-n', '--no_wait', action='store_false', default=False,
+    parser.add_argument('-n', '--no_wait', action='store_true',
                         help='Run without waiting (-d, -f only).')
     args = parser.parse_args()
     urls = [i for i in args.url if Interact.Interactive.is_url(i)]
