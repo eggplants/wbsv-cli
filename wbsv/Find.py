@@ -55,13 +55,14 @@ class Finder:
             self.fetched_urls.add(url)
 
         try:
-            print("Fetching: "+url)
+            print("[+]FETCHING: "+url)
             html_source = urlopen(url)
         except (HTTPError, URLError, UnicodeEncodeError):
             return set()
 
         html_source_charset = html_source.headers.get_content_charset(
-            failobj="utf-8")
+            failobj="utf-8"
+            )
 
         try:
             html_decoded = html_source.read().decode(
@@ -106,7 +107,6 @@ class Finder:
         self.print_result()
 
         try:
-            for l in self.urls:
-                archiver.archive(l, self.urls)
+            [archiver.archive(l, self.urls) for l in self.urls]
         except KeyboardInterrupt:
             print("Interrupt: Stopped saving pages.")

@@ -19,10 +19,9 @@ class AbstractArchiver():
         pass
 
     def archive(self, url, url_dic):
-        print("Saving: "+url)
+        print("[+]SAVING: " + url)
         result = self.retry_ntimes(self.try_archive, url, url_dic)
         self.add_result(result)
-        print(("Saved: " if result else "Failed: ")+url)
 
     def retry_ntimes(self, func, a1, a2):
         for i in range(self.retry):
@@ -49,7 +48,7 @@ class AbstractArchiver():
 class Archiver(AbstractArchiver):
     def try_archive(self, url, url_dic):
         try:
-            ind, size = list(url_dic).index(url), len(url_dic)
+            ind, size = list(url_dic).index(url) + 1, len(url_dic)
             print("[%d/%d]: Wait...    " % (ind, size), end="\r")
             archive_uri, exist_f = capture_or_cache(url)
             print("[%d/%d]:" % (ind, size), end=" ")
