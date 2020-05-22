@@ -13,12 +13,19 @@ def collect_archiver(opt):
         return Archive.Archiver()
 
 
+def collect_finder(opt):
+    if opt["fake-fetch"]:
+        return Find.DummyFinder()
+    else:
+        return Find.Finder()
+
+
 def main():
     """Main function."""
     opt = ParseArgs.parse_args()
 
     archiver = collect_archiver(opt)
-    finder = Find.Finder()
+    finder = collect_finder(opt)
 
     archiver.parse_opt(opt)
     finder.parse_opt(opt)

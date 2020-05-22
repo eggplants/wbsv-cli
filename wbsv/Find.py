@@ -7,13 +7,16 @@ import time
 from bs4 import BeautifulSoup
 
 from urllib.parse import urlparse, urljoin
+import os
+import json
 
 
-class Finder:
+class AbstractFinder():
     def __init__(self):
         """initialize."""
         self.urls = set()
         self.fetched_urls = set()
+        self.no_wait = False
 
     def clean(self):
         self.urls = set()
@@ -46,6 +49,20 @@ class Finder:
         """Remove not available data from list."""
         return {x for x in l if x is not None and len(x) > 1}
 
+    def fetch_url(self, url):
+        """
+        Abstract method
+
+        @args:
+            url: URL
+        @return:
+            List of URLs included on document of `url`
+        """
+        return {}
+
+    def wait(self):
+        time.sleep(randint(2, 5))
+    
     def find_uri(self, url):
         """Find links in page."""
         # extract elements containing of uri links in a page
@@ -54,28 +71,8 @@ class Finder:
         else:
             self.fetched_urls.add(url)
 
-        try:
-            print("[+]FETCHING: "+url)
-            html_source = urlopen(url)
-        except (HTTPError, URLError, UnicodeEncodeError):
-            return set()
-
-        html_source_charset = html_source.headers.get_content_charset(
-            failobj="utf-8"
-            )
-
-        try:
-            html_decoded = html_source.read().decode(
-                html_source_charset, 'ignore'
-            )
-            uris_misc = BeautifulSoup(html_decoded, "html.parser").findAll(
-                ["a"]
-            )
-        except IncompleteRead:
-            uris_misc = []
-
-        # extract uri link data
-        uris_misc = sum([[i.get("href")] for i in uris_misc], [])
+        print("[+]FETCHING: "+url)
+        uris_misc = self.fetch_url(url)
         # change "relative" uri into "absolute" one
         uris_misc = {urljoin(url, i) for i in uris_misc}
         # exclude mailto:// or javascript:// ...
@@ -101,7 +98,7 @@ class Finder:
                         (remain_count, len(search_queue[-1])), end="\r")
                     add_set |= self.find_uri(url)
                     remain_count += 1
-                    time.sleep(randint(2, 5))
+                    self.wait()
 
                 print("[+]LEVEL: %d FINISHED!" % (lev + 1))
                 self.urls |= add_set
@@ -120,3 +117,52 @@ class Finder:
             [archiver.archive(l, self.urls) for l in self.urls]
         except KeyboardInterrupt:
             print("Interrupt: Stopped saving pages.")
+
+
+class Finder(AbstractFinder):
+    def fetch_url(self, url):
+        try:
+            html_source = urlopen(url)
+        except (HTTPError, URLError, UnicodeEncodeError):
+            return set()
+
+        html_source_charset = html_source.headers.get_content_charset(
+            failobj="utf-8"
+            )
+
+        try:
+            html_decoded = html_source.read().decode(
+                html_source_charset, 'ignore'
+            )
+            uris_misc = BeautifulSoup(html_decoded, "html.parser").findAll(
+                ["a"]
+            )
+        except IncompleteRead:
+            uris_misc = []
+
+        # extract uri link data
+        return sum([[i.get("href")] for i in uris_misc], [])
+
+
+class DummyFinder(AbstractFinder):
+    def __init__(self):
+        super().__init__()
+        with open( os.path.dirname(__file__)+"/../test/page.json" ) as f:
+            self.pages = json.loads(f.read())
+
+    def parse_opt(self, opt):
+        super().parse_opt(opt)
+        if opt["no-wait"]:
+            self.no_wait = True
+
+    def fetch_url(self, url):
+        if url in self.pages:
+            return self.pages[url]["children"]
+        else:
+            return {}
+    
+    def wait(self):
+        if self.no_wait :
+            pass
+        else:
+            super().wait()
