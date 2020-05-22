@@ -46,7 +46,7 @@ def parse_args():
                         help='Set a retry limit on failed save.')
     parser.add_argument('-t', '--only_target', action='store_true',
                         help='Save just target webpage(s).')
-    parser.add_argument('-L', '--level', default=0, dest="level",
+    parser.add_argument('-L', '--level', default=0,
                         type=natural_num, metavar='lv',
                         help='Set maximum recursion depth.')
     parser.add_argument('-d', '--dry_run', action='store_true', default=False,
@@ -56,7 +56,7 @@ def parse_args():
     if args.url != urls:
         print("[!]invalid url format", file=sys.stderr)
         exit(1)
-    print(args)
+
     param = {
         "retry": args.retry,
         "urls": urls,
