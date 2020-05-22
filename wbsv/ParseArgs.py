@@ -2,7 +2,7 @@ import argparse
 import sys
 import textwrap
 
-from . import Archive
+#from . import Archive
 from . import Interact
 
 __version__ = 'wbsv 0.2.0'
@@ -11,14 +11,12 @@ __version__ = 'wbsv 0.2.0'
 def natural_num(n):
     """Judge whether numstr is positive or not."""
     if not n.isdecimal():
-        print("[!]Err: num {} should be positive integer.".format(n),
-              file=sys.stderr)
-        exit(1)
-    elif int(n) < 1:
-        print("[!]Err: num {} should be more than 0.".format(n),
-              file=sys.stderr)
-        exit(1)
+        raise argparse.ArgumentTypeError("[!]Err: num {} should be positive integer.".format(n))
 
+    elif int(n) < 1:
+        raise argparse.ArgumentTypeError("[!]Err: num {} should be more than 0.".format(n))
+    
+    else:
         return int(n)
 
 
