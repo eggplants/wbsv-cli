@@ -82,21 +82,31 @@ class Finder:
         uris_misc = {i for i in uris_misc if self.is_valid_scheme(i) and self.is_page(i)}
         return self.remove_useless(uris_misc)
 
-    def extract_uri_recursive(self, url, depth):
+    def extract_uri_recursive(self, url, rec):
         # To exit extracting URL, listen KeyboardInterrupt arround this method.
-        if depth == 0:
+
+        #uri_dic => self.urls
+        search_queue = [[url]]
+        
+        if rec == 0:
             self.urls.add(url)
             return
-        elif depth == 1:
-            self.urls |= self.find_uri(url)
-            return
         else:
-            included_urls = self.find_uri(url)
-            for l in included_urls:
-                self.extract_uri_recursive(l, depth-1)
-                time.sleep(randint(2, 5))
+            for lev in range(rec):
+                print("[+]LEVEL: %d" % (lev + 1))
+                add_set = set()
+                remain_count = 1
+                for url in search_queue[-1]:
+                    print("[+]REMAIN:%d/%d" %
+                        (remain_count, len(search_queue[-1])), end="\r")
+                    add_set |= self.find_uri(url)
+                    remain_count += 1
+                    time.sleep(randint(2, 5))
 
-            self.urls |= included_urls
+                print("[+]LEVEL: %d FINISHED!" % (lev + 1))
+                self.urls |= add_set
+                search_queue.append(add_set)
+
 
     def find_and_archive(self, url, archiver):
         try:
