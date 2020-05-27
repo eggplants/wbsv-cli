@@ -53,7 +53,7 @@ def parse_args():
                         help='Run without saving (dry-run mode)')
     parser.add_argument('-f', '--fake_fetch', action='store_true', default=False,
                         help='Run without page fetching.')
-    parser.add_argument('-n', '--no_wait', action='store_true', default=False,
+    parser.add_argument('-n', '--no_wait', action='store_false', default=False,
                         help='Run without waiting (-d, -f only).')
     args = parser.parse_args()
     urls = [i for i in args.url if Interact.Interactive.is_url(i)]
