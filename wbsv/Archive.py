@@ -1,6 +1,7 @@
 import re
 import sys
 import time
+import random
 
 from requests.exceptions import ConnectionError, TooManyRedirects, HTTPError
 
@@ -53,6 +54,7 @@ def try_archive(id_, dic_size, uri):
     """Try to save a page on Wayback Machine."""
     try:
         print("[%s/%d]: Wait...    " % (id_, dic_size), end="\r")
+        time.sleep(random.uniform(1, 3))
         archive_uri, exist_f = capture_or_cache(uri)
         print("[%s/%d]:" % (id_, dic_size), end=" ")
         print("<%s>" % "NOW" if exist_f else "PAST", archive_uri)
