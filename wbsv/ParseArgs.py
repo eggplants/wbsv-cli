@@ -49,9 +49,9 @@ def parse_args():
     parser.add_argument('-L', '--level', default=0,
                         type=natural_num, metavar='lv',
                         help='Set maximum recursion depth.')
-    parser.add_argument('-d', '--dry_run', action='store_true', default=False,
+    parser.add_argument('-d', '--dry_run', action='store_false', default=False,
                         help='Run without saving (dry-run mode)')
-    parser.add_argument('-f', '--fake_fetch', action='store_true', default=False,
+    parser.add_argument('-f', '--fake_fetch', action='store_false', default=False,
                         help='Run without page fetching.')
     parser.add_argument('-n', '--no_wait', action='store_false', default=False,
                         help='Run without waiting (-d, -f only).')
