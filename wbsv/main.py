@@ -10,6 +10,7 @@ def iter_urls(opt):
     """Iterate given urls for saving."""
     try:
         for x in opt["urls"]:
+            print(opt["level"])
             Archive.archive(Find.extract_uri_recursive(x, opt["level"]),
                             x, opt["retry"])
 
