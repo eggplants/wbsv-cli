@@ -64,10 +64,13 @@ def try_archive(id_, dic_size, uri):
         return False
 
 
-def archive(uri_dic, pageurl, RETRY):
+def archive(uri_dic, pageurl, RETRY, DRY):
     """Save URIs extracted from the target page."""
     print("[+]Now: %s" % pageurl)
     print("[+]%d URI(s) found." % len(uri_dic))
+    if DRY:
+        [print(uri) for uri in uri_dic]
+        return True
     # try to throw each uri to API
     count, saves, fails = 0, 0, 0
     for uri in uri_dic:

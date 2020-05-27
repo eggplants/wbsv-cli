@@ -26,7 +26,7 @@ def chk_url_cond(url, opt):
         exit(0)
 
     elif opt["only-target"]:
-        Archive.archive([url], url, opt["retry"])
+        Archive.archive([url], url, opt["retry"], opt["dry-run"])
 
     else:
         try:
@@ -37,7 +37,7 @@ def chk_url_cond(url, opt):
             print("[!]Interrupted!", file=sys.stderr)
             print("[!]Halt.", file=sys.stderr)
 
-        Archive.archive(dic, url, opt["retry"])
+        Archive.archive(dic, url, opt["retry"], opt["dry-run"])
 
 
 def interactive(opt):

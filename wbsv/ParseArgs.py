@@ -42,7 +42,7 @@ def parse_args():
                         help='Set a retry limit on failed save.')
     parser.add_argument('-t', '--only_target', action='store_true',
                         help='Save just target webpage(s).')
-    parser.add_argument('-L', '--level', default=0,
+    parser.add_argument('-L', '--level', default=1,
                         metavar='lv', type=int,
                         help='Set maximum recursion depth.')
     parser.add_argument('-d', '--dry_run', action='store_true', default=False,

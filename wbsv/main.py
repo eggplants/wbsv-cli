@@ -10,9 +10,8 @@ def iter_urls(opt):
     """Iterate given urls for saving."""
     try:
         for x in opt["urls"]:
-            print(opt["level"])
             Archive.archive(Find.extract_uri_recursive(x, opt["level"]),
-                            x, opt["retry"])
+                            x, opt["retry"], opt["dry-run"])
 
     except KeyboardInterrupt:
         print("[!]Interrupted!", file=sys.stderr)
@@ -28,7 +27,7 @@ def main():
         Interact.interactive(opt)
 
     elif opt["only-target"]:
-        [Archive.archive([x], x, opt["retry"]) for x in opt["urls"]]
+        [Archive.archive([x], x, opt["retry"], opt["dry-run"]) for x in opt["urls"]]
         exit(0)
 
     else:
