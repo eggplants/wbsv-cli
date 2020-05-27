@@ -30,7 +30,7 @@ $ python -m pip install wbsv
 
 ```bash
 $ wbsv -V
-wbsv 0.2.1
+wbsv 0.2.2
 $ wbsv -h
 usage: wbsv [-h] [-V] [-r cnt] [-t] [-L lv] [url [url ...]]
 
@@ -116,7 +116,7 @@ $ wbsv https://tsumanne.net --retry 10
 
 ## VERSION
 
-`wbsv 0.2.1`
+`wbsv 0.2.2`
 
 ## LISENCE
 
