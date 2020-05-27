@@ -4,7 +4,7 @@ import textwrap
 
 from . import Archive
 
-__version__ = 'wbsv 0.2.2'
+__version__ = 'wbsv 0.2.3'
 
 
 def natural_num(n):
