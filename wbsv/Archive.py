@@ -23,13 +23,16 @@ class AbstractArchiver():
         result = self.retry_ntimes(self.try_archive, url, url_dic)
         self.add_result(result)
 
+    def wait(self):
+        time.sleep(randint(2,10))
+
     def retry_ntimes(self, func, *args):
         for i in range(self.retry):
             if func(*args):
                 return True
             else:
                 print("fail: "+str(i+1))
-                time.sleep(randint(2, 10))
+                self.wait()
 
         return False
 
@@ -60,8 +63,19 @@ class Archiver(AbstractArchiver):
 
 
 class RandomArchiver(AbstractArchiver):
+    def parse_opt(self, opt):
+        super().parse_opt(opt)
+        if opt["no-wait"]:
+            self.no_wait = True
+
     def try_archive(self, url, url_dic):
         if random() > 0.5:
             return True
         else:
             return False
+
+    def wait(self):
+        if self.no_wait :
+            pass
+        else:
+            super().wait()

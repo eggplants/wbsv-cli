@@ -1,0 +1,31 @@
+{
+    "http://localhost/": {
+        "type": "text/html",
+        "children": [
+            "/1",
+            "//localhost/2",
+            "https://localhost/3"
+        ]
+    },
+    "http://localhost/1": {
+        "type": "text/html",
+        "children": []
+    },
+    "http://localhost/2": {
+        "type": "text/html",
+        "children": [
+            "1",
+            "/datas/pdf.pdf"
+        ]
+    },
+    "https://localhost/3": {
+        "type": "text/html",
+        "children": [
+            "http://localhost/"
+        ]
+    },
+    "http://localhost/datas/pdf.pdf": {
+        "type": "application/pdf",
+        "children": []
+    }
+}
