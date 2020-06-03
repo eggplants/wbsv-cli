@@ -8,6 +8,12 @@
 CLI tool for saving webpage on Wayback Machine forever.
 Enables you to **save all URIs** in a webpage forever on [Wayback Machine](https://archive.org/web/).
 
+## Install
+
+```bash
+$ pip install wbsv
+```
+
 ## Try now
 
 You can try this tool on Google Cloud Shell. (First, `sudo python3 -m pip install -e .`)
@@ -17,12 +23,6 @@ You can try this tool on Google Cloud Shell. (First, `sudo python3 -m pip instal
 ## DEMO
 
 ![demo.gif](https://raw.githubusercontent.com/wiki/eggplants/wbsv-cli/demo.gif)
-
-## Install
-
-```bash
-$ python -m pip install wbsv
-```
 
 ## Run & Examples
 
