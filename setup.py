@@ -11,7 +11,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     license='MIT',
-    install_requires=["beautifulsoup4", "savepagenow"],
+    install_requires=["beautifulsoup4>=4.9.1", "savepagenow>=1.0.0"],
     entry_points={
         "console_scripts": [
             "wbsv=wbsv.main:main"
