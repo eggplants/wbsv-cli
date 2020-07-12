@@ -55,7 +55,12 @@ def try_archive(id_, dic_size, uri):
     try:
         print("[%s/%d]: Wait...    " % (id_, dic_size), end="\r")
         time.sleep(random.uniform(1, 3))
-        archive_uri, exist_f = capture_or_cache(uri)
+        archive_uri, exist_f = capture_or_cache(
+            uri,
+            user_agent='Mozilla/5.0 (iPhone; CPU iPhone OS 10_2 like Mac OS X) '\
+                       'AppleWebKit/602.3.12 (KHTML, like Gecko) Version/10.0 '\
+                       'Mobile/14C92 Safari/602.1'
+        )
         print("[%s/%d]:" % (id_, dic_size), end=" ")
         print("<%s>" % "NOW" if exist_f else "PAST", archive_uri)
         return True
