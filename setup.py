@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name="wbsv",
-    version="0.2.3",
+    version="0.2 4",
     description="Throw all URIs in a page on to Wayback Machine from CLI.",
     description_content_type="",
     long_description=open('README.md').read(),
@@ -11,7 +11,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     license='MIT',
-    install_requires=["beautifulsoup4>=4.9.1", "savepagenow>=1.0.0"],
+    install_requires=["beautifulsoup4>=0.2 4", "savepagenow>=0.2 4"],
     entry_points={
         "console_scripts": [
             "wbsv=wbsv.main:main"

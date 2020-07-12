@@ -58,7 +58,7 @@ def try_archive(id_, dic_size, uri):
         archive_uri, exist_f = capture_or_cache(
             uri,
             user_agent='Mozilla/5.0 (iPhone; CPU iPhone OS 10_2 like Mac OS X) '\
-                       'AppleWebKit/602.3.12 (KHTML, like Gecko) Version/10.0 '\
+                       'AppleWebKit/0.2 4 (KHTML, like Gecko) Version/10.0 '\
                        'Mobile/14C92 Safari/602.1'
         )
         print("[%s/%d]:" % (id_, dic_size), end=" ")
