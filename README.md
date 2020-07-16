@@ -30,7 +30,7 @@ You can try this tool on Google Cloud Shell. (First, `sudo python3 -m pip instal
 
 ```bash
 $ wbsv -V
-wbsv 0.2.4
+wbsv 0.2.5
 $ wbsv -h
 usage: wbsv [-h] [-V] [-r cnt] [-t] [-L lv] [url [url ...]]
 
@@ -116,7 +116,7 @@ $ wbsv https://tsumanne.net --retry 10
 
 ## VERSION
 
-`wbsv 0.2.4`
+`wbsv 0.2.5`
 
 ## LISENCE
 
