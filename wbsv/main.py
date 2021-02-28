@@ -67,6 +67,7 @@ def parse_args():
 
 
 def usual(args):
+    past, now, fail = 0, 0, 0
     print('[+]Target: {}'.format(args.url))
     c = Clawler(args)
     retrieved_links = set().union(*c.run_crawl())
@@ -80,8 +81,16 @@ def usual(args):
             print('[{:02d}/{}]: <{}> {}'.format(
                 ind, len_links,
                 ('PAST' if cached_flag else 'NOW'), archived_link))
+            if cached_flag:
+                past += 1
+            else:
+                now += 1
         else:
             print('[{:02d}/{}]: <FAIL> {}'.format(ind, len_links, link))
+            fail += 1
+
+    print('[+]FIN!: {}'.format(args.url))
+    print('[+]ALL: {}, NOW: {}, PAST: {}, FAIL: {}'.format(len_links, now, past, fail))
 
 
 def repl(args):

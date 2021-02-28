@@ -62,7 +62,9 @@ $ wbsv
 [58/60]: <NOW> https://web.archive.org/web/20200412022608/https://www.u.tsukuba.ac.jp/phishing/
 [59/60]: <FAIL> https://www.u.tsukuba.ac.jp/wordpress/wp-content/uploads/note_usingcomputerrooms.png
 [60/60]: <NOW> https://web.archive.org/web/20200412022640/https://www.u.tsukuba.ac.jp/
->>> 
+[+]FIN!: ['https://www.u.tsukuba.ac.jp']
+[+]ALL: 60, SAVE: 57, PAST: 0, FAIL: 3
+>>>
 ```
 
 ### From stdin
@@ -75,19 +77,21 @@ $ wbsv https://tsumanne.net
 [2/4]: <NOW> https://web.archive.org/web/20200412022935/https://tsumanne.net/
 [3/4]: <NOW> https://web.archive.org/web/20200412022938/https://tsumanne.net/my/
 [4/4]: <NOW> https://web.archive.org/web/20200412022949/https://tsumanne.net/ct/
+[+]FIN!: ['https://tsumanne.net']
+[+]ALL: 4, SAVE: 4, PAST: 0, FAIL: 0
 $
 ```
 
 ### Search links recurcively
 
 ```bash
-$ wbsv https://programming-place.net/ppp/contents/c/index.html -l2
+$ wbsv https://programming-place.net/ppp/contents/c/index.html -l 2
 ```
 
 ### Increase limit of retry
 
 ```bash
-$ wbsv https://tsumanne.net -r 3
+$ wbsv https://tsumanne.net -r 10
 ```
 
 ## LISENCE
