@@ -1,3 +1,4 @@
 waybackpy
 bs4
 requests
+lxml
