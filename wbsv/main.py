@@ -38,7 +38,7 @@ def check_positive(v):
     return int(v)
 
 
-def parse_args():
+def parse_args(test=None):
     """Parse arguments."""
 
     parser = argparse.ArgumentParser(
@@ -66,7 +66,10 @@ def parse_args():
                         default=1)
     parser.add_argument('-V', '--version', action='version',
                         version='%(prog)s {}'.format(__version__))
-    return parser.parse_args()
+    if test:
+        return parser.parse_args(test)
+    else:
+        return parser.parse_args()
 
 
 def usual(args):
@@ -81,13 +84,9 @@ def usual(args):
         archive = a.archive(link)
         if archive:
             archived_link, cached_flag = archive
-            print('[{:02d}/{}]: <{}> {}'.format(
-                ind, len_links,
-                ('PAST' if cached_flag else 'NOW'), archived_link))
-            if cached_flag:
-                past += 1
-            else:
-                now += 1
+            inc = cache_or_now(ind, len_links, archived_link, cached_flag)
+            past += inc[0]
+            now += inc[1]
         else:
             print('[{:02d}/{}]: <FAIL> {}'.format(ind, len_links, link))
             fail += 1
@@ -96,7 +95,17 @@ def usual(args):
     print('[+]ALL: {}, NOW: {}, PAST: {}, FAIL: {}'.format(len_links, now, past, fail))
 
 
+def cache_or_now(ind, len_links, archived_link, cached_flag):
+    if cached_flag:
+        print('[{:02d}/{}]: <PAST> {}'.format(ind, len_links, archived_link))
+        return (1, 0)
+    else:
+        print('[{:02d}/{}]: <NOW> {}'.format(ind, len_links, archived_link))
+        return (0, 1)
+
+
 def repl(args):
+    print('[[Input a target url (ex: https://google.com)]]')
     while True:
         link = input('>>> ').rstrip()
         args.url = [link]
@@ -108,7 +117,6 @@ def main():
         raise HttpConnectionNotFountError
     args = parse_args()
     if len(sys.argv) <= 1:
-        print('[[Input a target url (ex: https://google.com)]]')
         repl(args)
     else:
         usual(args)
