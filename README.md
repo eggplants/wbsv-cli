@@ -24,7 +24,7 @@ $ pip install wbsv
 
 ```bash
 $ wbsv -h
-usage: wbsv [-h] [-r times] [-t] [-l level] [url [url ...]]
+usage: wbsv [-h] [-r times] [-t] [-l level] [-V] [url [url ...]]
 
 CLI tool for save webpage on Wayback Machine forever.
 Save webpage and one 's all URI(s) on Wayback Machine.
@@ -39,6 +39,7 @@ optional arguments:
   -t, --only_target     Save just target webpage(s).
   -l level, --level level
                         Set maximum recursion depth. (>0)
+  -V, --version         show program's version number and exit
 
 If you don't give the URL,
 interactive mode will be launched.

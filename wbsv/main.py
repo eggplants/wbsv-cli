@@ -4,6 +4,7 @@ import http.client as httplib
 import sys
 import textwrap
 
+from wbsv import __version__
 from wbsv.archiver import Archiver
 from wbsv.crawler import Clawler
 
@@ -63,6 +64,8 @@ def parse_args():
     parser.add_argument('-l', '--level', type=check_positive,
                         metavar='level', help='Set maximum recursion depth. (>0)',
                         default=1)
+    parser.add_argument('-V', '--version', action='version',
+                        version='%(prog)s {}'.format(__version__))
     return parser.parse_args()
 
 
