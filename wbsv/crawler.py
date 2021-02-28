@@ -22,20 +22,23 @@ class Clawler:
         if self.only_target:
             return [set(self.urls)]
         for now_level in range(self.level):
-            collecting_links = set()
-            collected_links = set().union(*self.queue)
-            if now_level == 0:
-                self.queue.append(set(self.urls))
-            for url in self.queue[-1]:
-                source = requests.get(
-                    url, headers={'User-Agent': self.UA}).content
-                data = BS(source, parser="html.parser", features="lxml")
-                extracted_url = [urljoin(url, _.get('href'))
-                                 for _ in set(data.find_all('a'))]
-                collecting_links |= set(self._normalize_url(extracted_url))
-            self.queue.append(collecting_links - collected_links)
+            self._crawl(now_level)
 
         return self.queue
+
+    def _crawl(self, now_level):
+        collecting_links = set()
+        collected_links = set().union(*self.queue)
+        if now_level == 0:
+            self.queue.append(set(self.urls))
+        for url in self.queue[-1]:
+            source = requests.get(
+                url, headers={'User-Agent': self.UA}).content
+            data = BS(source, parser="html.parser", features="lxml")
+            extracted_url = [urljoin(url, _.get('href'))
+                             for _ in set(data.find_all('a'))]
+            collecting_links |= set(self._normalize_url(extracted_url))
+        self.queue.append(collecting_links - collected_links)
 
     def _normalize_url(self, urls):
         valid_urls = []
