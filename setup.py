@@ -1,7 +1,8 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
+
 setup(
     name="wbsv",
-    version="0.2.5",
+    version="0.3.0",
     description="Throw all URIs in a page on to Wayback Machine from CLI.",
     description_content_type="",
     long_description=open('README.md').read(),
@@ -9,9 +10,10 @@ setup(
     url="https://github.com/eggplants/wbsv-cli",
     author="eggplants",
     packages=find_packages(),
+    python_requires='>=3.5',
     include_package_data=True,
     license='MIT',
-    install_requires=["beautifulsoup4>=4.9", "savepagenow>=1.0"],
+    install_requires=open('requirements.txt').read().splitlines(),
     entry_points={
         "console_scripts": [
             "wbsv=wbsv.main:main"
