@@ -30,3 +30,6 @@ class Archiver:
         except waybackpy.exceptions.WaybackError as e:
             print(e, file=sys.stderr)
             return False
+        except AttributeError as e:
+            print(e, file=sys.stderr)
+            return False
