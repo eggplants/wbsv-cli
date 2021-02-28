@@ -1,39 +1,115 @@
+#!/usr/bin/env python
+import argparse
+import http.client as httplib
 import sys
+import textwrap
 
-from . import Archive
-from . import Find
-from . import ParseArgs
-from . import Interact
+from wbsv.archiver import Archiver
+from wbsv.crawler import Clawler
 
 
-def iter_urls(opt):
-    """Iterate given urls for saving."""
+class HttpConnectionNotFountError(Exception):
+    pass
+
+
+def check_connectivity(url="www.google.com", timeout=3):
+    conn = httplib.HTTPConnection(url, timeout=timeout)
     try:
-        for x in opt["urls"]:
-            Archive.archive(Find.extract_uri_recursive(x, opt["level"]),
-                            x, opt["retry"], opt["dry-run"])
+        conn.request("HEAD", "/")
+        conn.close()
+        return True
+    except Exception as e:
+        print(e, file=sys.stderr)
+        return False
 
-    except KeyboardInterrupt:
-        print("[!]Interrupted!", file=sys.stderr)
-        print("[!]Halt.", file=sys.stderr)
-        exit(1)
+
+def check_natural(v):
+    if int(v) < 0:
+        raise argparse.ArgumentTypeError(
+            "%s is an invalid natural number" % int(v))
+    return int(v)
+
+
+def check_positive(v):
+    if int(v) <= 0:
+        raise argparse.ArgumentTypeError(
+            "%s is an invalid natural number" % int(v))
+    return int(v)
+
+
+def parse_args():
+    """Parse arguments."""
+
+    parser = argparse.ArgumentParser(
+        prog='wbsv',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=textwrap.dedent('''\
+            CLI tool for save webpage on Wayback Machine forever.
+            Save webpage and one 's all URI(s) on Wayback Machine.'''),
+        epilog=textwrap.dedent('''\
+            If you don't give the URL,
+            interactive mode will be launched.
+            (To quit interactive mode,
+            type "end", "exit", "exit()",
+            "break", "bye", ":q" or "finish".)'''))
+
+    parser.add_argument('url', metavar='url', nargs='*', type=str,
+                        help='Saving pages in order.')
+    parser.add_argument('-r', '--retry', type=check_natural,
+                        metavar='times', help='Set a retry limit on failed save.(>=0',
+                        default=0)
+    parser.add_argument('-t', '--only_target', action='store_true',
+                        help='Save just target webpage(s).')
+    parser.add_argument('-l', '--level', type=check_positive,
+                        metavar='level', help='Set maximum recursion depth. (>0)',
+                        default=1)
+    return parser.parse_args()
+
+
+def usual(args):
+    past, now, fail = 0, 0, 0
+    print('[+]Target: {}'.format(args.url))
+    c = Clawler(args)
+    retrieved_links = set().union(*c.run_crawl())
+    len_links = len(retrieved_links)
+    print('[+]{} URI(s) found.'.format(len_links))
+    a = Archiver(args)
+    for ind, link in enumerate(retrieved_links, 1):
+        archive = a.archive(link)
+        if archive:
+            archived_link, cached_flag = archive
+            print('[{:02d}/{}]: <{}> {}'.format(
+                ind, len_links,
+                ('PAST' if cached_flag else 'NOW'), archived_link))
+            if cached_flag:
+                past += 1
+            else:
+                now += 1
+        else:
+            print('[{:02d}/{}]: <FAIL> {}'.format(ind, len_links, link))
+            fail += 1
+
+    print('[+]FIN!: {}'.format(args.url))
+    print('[+]ALL: {}, NOW: {}, PAST: {}, FAIL: {}'.format(len_links, now, past, fail))
+
+
+def repl(args):
+    while True:
+        link = input('>>> ').rstrip()
+        args.url = [link]
+        usual(args)
 
 
 def main():
-    """Main function."""
-    opt = ParseArgs.parse_args()
-
-    if len(opt["urls"]) == 0:
-        Interact.interactive(opt)
-
-    elif opt["only-target"]:
-        [Archive.archive([x], x, opt["retry"], opt["dry-run"]) for x in opt["urls"]]
-        exit(0)
-
+    if not check_connectivity():
+        raise HttpConnectionNotFountError
+    args = parse_args()
+    if len(sys.argv) <= 1:
+        print('[[Input a target url (ex: https://google.com)]]')
+        repl(args)
     else:
-        iter_urls(opt)
-        exit(0)
+        usual(args)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

@@ -1,64 +1,35 @@
-import time
+import sys
 
-from random import random, randint
-
-from savepagenow import capture_or_cache
-from savepagenow.api import WaybackRuntimeError
+import waybackpy
 
 
-class AbstractArchiver():
-    def __init__(self):
-        """initialize."""
-        self.save_count = 0
-        self.fail_count = 0
+class SavepagenowFailureError(Exception):
+    pass
 
-    def parse_opt(self, opt):
-        self.retry = opt["retry"]
 
-    def try_archive(self, url):
-        pass
+class Archiver:
+    def __init__(self, args):
+        self.retry = args.retry
+        self.UA = 'Mozilla/5.0 (Windows NT 5.1; rv:40.0) '\
+                  'Gecko/20100101 Firefox/40.0'
 
     def archive(self, url):
-        print("Saving: "+url)
-        result = self.retry_ntimes( self.try_archive, [url] )
-        self.add_result(result)
-        print( ("Saved: " if result else "Failed: ")+url)
-
-    def retry_ntimes(self, func, args=()):
-        for i in range(self.retry):
-            if func(*args):
-                return True
+        wp = waybackpy.Url(url, self.UA)
+        for i in range(self.retry+1):
+            if not self._try_savepagenow(wp):
+                continue
             else:
-                print("fail: "+str(i+1))
-                time.sleep(randint(2,10))
-
-        return False
-
-    def add_result(self, result):
-        if result:
-            self.save_count += 1
+                return (wp.archive_url, wp.cached_save)
         else:
-            self.fail_count += 1
-
-    def print_result(self):
-        #print("[+]FIN!: %s" % pageurl)
-        print("SAVE:", self.save_count, "FAIL:", self.fail_count)
-
-class Archiver(AbstractArchiver):
-    def try_archive(self, url):
-        try:
-            #print("[%s/%d]: Wait...    " % (id_, dic_size), end="\r")
-            archive_uri, exist_f = capture_or_cache(url)
-            #print("[%s/%d]:" % (id_, dic_size), end=" ")
-            print("<%s>" % "NOW" if exist_f else "PAST", archive_uri)
-            return True
-
-        except WaybackRuntimeError:
             return False
 
-class RandomArchiver(AbstractArchiver):
-    def try_archive(self, url):
-        if random() > 0.5 :
+    def _try_savepagenow(self, wp):
+        try:
+            wp.save()
             return True
-        else:
+        except waybackpy.exceptions.WaybackError as e:
+            print(e, file=sys.stderr)
+            return False
+        except AttributeError as e:
+            print(e, file=sys.stderr)
             return False
