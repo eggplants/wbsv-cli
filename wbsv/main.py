@@ -105,11 +105,17 @@ def cache_or_now(ind, len_links, archived_link, cached_flag):
 
 
 def repl(args):
+    finish_words = [
+        'end', 'exit', 'exit()', 'break', 'bye', ':q', 'finish'
+    ]
     print('[[Input a target url (ex: https://google.com)]]')
     while True:
         link = input('>>> ').rstrip()
-        args.url = [link]
-        usual(args)
+        if link in finish_words:
+            break
+        else:
+            args.url = [link]
+            usual(args)
 
 
 def main():
