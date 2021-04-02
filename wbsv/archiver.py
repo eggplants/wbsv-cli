@@ -26,10 +26,14 @@ class Archiver:
     def _try_savepagenow(self, wp):
         try:
             wp.save()
-            return True
+        except waybackpy.exceptions.RedirectSaveError as e:
+            print(e, file=sys.stderr)
+            return False
         except waybackpy.exceptions.WaybackError as e:
             print(e, file=sys.stderr)
             return False
         except AttributeError as e:
             print(e, file=sys.stderr)
             return False
+        else:
+            return True
