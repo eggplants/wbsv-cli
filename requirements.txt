@@ -1,4 +1,4 @@
 waybackpy
 bs4
-requests
+requests>=1.26.5
 lxml
