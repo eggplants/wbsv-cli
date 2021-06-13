@@ -1,11 +1,11 @@
-from urllib import parse
 from urllib.parse import urljoin, urlparse
+from warnings import warn
 
 import requests
 from bs4 import BeautifulSoup as BS
 
 
-class MissingURLSchemaError(Exception):
+class MissingURLSchemaWarning(UserWarning):
     pass
 
 
@@ -45,10 +45,13 @@ class Clawler:
         for url in urls:
             parsed_url = urlparse(url)
             if self._check_schema(parsed_url):
-                raise MissingURLSchemaError(
-                    '{}: schema {} is not valid.'.format(url, parsed_url.scheme))
+                warn(
+                    '{}: schema {} is not valid.'.format(
+                        url, parsed_url.scheme),
+                    MissingURLSchemaWarning)
             valid_urls.append(parsed_url.geturl())
         return valid_urls
 
     def _check_schema(self, parsed_url):
-        return parsed_url.scheme == '' or not parsed_url.scheme in ('http', 'https', 'ftp', 'file')
+        isvalid = parsed_url.scheme not in ('http', 'https', 'ftp', 'file')
+        return parsed_url.scheme == '' or isvalid

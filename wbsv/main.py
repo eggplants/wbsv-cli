@@ -57,13 +57,13 @@ def parse_args(test=None):
     parser.add_argument('url', metavar='url', nargs='*', type=str,
                         help='Saving pages in order.')
     parser.add_argument('-r', '--retry', type=check_natural,
-                        metavar='times', help='Set a retry limit on failed save.(>=0',
-                        default=0)
+                        metavar='times', default=0,
+                        help='Set a retry limit on failed save.(>=0')
     parser.add_argument('-t', '--only_target', action='store_true',
                         help='Save just target webpage(s).')
     parser.add_argument('-l', '--level', type=check_positive,
-                        metavar='level', help='Set maximum recursion depth. (>0)',
-                        default=1)
+                        metavar='level', default=1,
+                        help='Set maximum recursion depth. (>0)')
     parser.add_argument('-V', '--version', action='version',
                         version='%(prog)s {}'.format(__version__))
     if test:
@@ -92,7 +92,8 @@ def usual(args):
             fail += 1
 
     print('[+]FIN!: {}'.format(args.url))
-    print('[+]ALL: {}, NOW: {}, PAST: {}, FAIL: {}'.format(len_links, now, past, fail))
+    print('[+]ALL: {}, NOW: {}, PAST: {}, FAIL: {}'.format(
+        len_links, now, past, fail))
 
 
 def cache_or_now(ind, len_links, archived_link, cached_flag):
