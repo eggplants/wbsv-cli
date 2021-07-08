@@ -1,5 +1,5 @@
 waybackpy
-bs4
+beautifulsoup4
 requests>=1.26.5
 lxml
 urllib3>=1.25.9
