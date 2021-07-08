@@ -114,9 +114,14 @@ def repl(args):
         link = input('>>> ').rstrip()
         if link in finish_words:
             break
+        elif link == '':
+            pass
         else:
             args.url = [link]
-            usual(args)
+            try:
+                usual(args)
+            except Exception as e:
+                print(e, file=sys.stderr)
 
 
 def main():
