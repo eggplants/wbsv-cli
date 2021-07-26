@@ -44,14 +44,15 @@ class Clawler:
         valid_urls = []
         for url in urls:
             parsed_url = urlparse(url)
-            if self._check_schema(parsed_url):
+            if self._check_schema_is_invalid(parsed_url):
                 warn(
                     '{}: schema {} is not valid.'.format(
                         url, parsed_url.scheme),
                     MissingURLSchemaWarning)
-            valid_urls.append(parsed_url.geturl())
+            else:
+                valid_urls.append(parsed_url.geturl())
         return valid_urls
 
-    def _check_schema(self, parsed_url):
-        isvalid = parsed_url.scheme not in ('http', 'https', 'ftp', 'file')
-        return parsed_url.scheme == '' or isvalid
+    def _check_schema_is_invalid(self, parsed_url):
+        is_invalid = parsed_url.scheme not in ('http', 'https', 'ftp', 'file')
+        return parsed_url.scheme == '' or is_invalid
