@@ -11,6 +11,7 @@ class MissingURLSchemaWarning(UserWarning):
 
 class Clawler:
     def __init__(self, args):
+        """Init."""
         self.urls = self._normalize_url(args.url)
         self.only_target = args.only_target
         self.level = args.level
@@ -19,6 +20,7 @@ class Clawler:
                   'Gecko/20100101 Firefox/40.0'
 
     def run_crawl(self):
+        """Execute clawler."""
         if self.only_target:
             return [set(self.urls)]
         for now_level in range(self.level):
@@ -27,6 +29,7 @@ class Clawler:
         return self.queue
 
     def _crawl(self, now_level):
+        """Helper for clawling."""
         collecting_links = set()
         collected_links = set().union(*self.queue)
         if now_level == 0:
@@ -41,6 +44,7 @@ class Clawler:
         self.queue.append(collecting_links - collected_links)
 
     def _normalize_url(self, urls):
+        """Normalize url."""
         valid_urls = []
         for url in urls:
             parsed_url = urlparse(url)
@@ -53,6 +57,8 @@ class Clawler:
                 valid_urls.append(parsed_url.geturl())
         return valid_urls
 
-    def _check_schema_is_invalid(self, parsed_url):
+    @staticmethod
+    def _check_schema_is_invalid(parsed_url):
+        """Judge if given url has a valid schema."""
         is_invalid = parsed_url.scheme not in ('http', 'https', 'ftp', 'file')
         return parsed_url.scheme == '' or is_invalid

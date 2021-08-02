@@ -86,13 +86,13 @@ $
 ### Search links recurcively
 
 ```bash
-$ wbsv https://programming-place.net/ppp/contents/c/index.html -l 2
+wbsv https://programming-place.net/ppp/contents/c/index.html -l 2
 ```
 
 ### Increase limit of retry
 
 ```bash
-$ wbsv https://tsumanne.net -r 10
+wbsv https://tsumanne.net -r 10
 ```
 
 ## LISENCE
