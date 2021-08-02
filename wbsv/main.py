@@ -40,7 +40,6 @@ def check_positive(v):
 
 def parse_args(test=None):
     """Parse arguments."""
-
     parser = argparse.ArgumentParser(
         prog='wbsv',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -114,6 +113,7 @@ def repl(args):
     while True:
         link = input('>>> ').rstrip()
         if link in finish_words:
+            print('[+]End.')
             break
         elif link == '':
             pass

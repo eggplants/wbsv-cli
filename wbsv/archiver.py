@@ -15,13 +15,12 @@ class Archiver:
 
     def archive(self, url):
         wp = waybackpy.Url(url, self.UA)
-        for i in range(self.retry+1):
+        for _ in range(self.retry+1):
             if not self._try_savepagenow(wp):
                 continue
             else:
                 return (wp.archive_url, wp.cached_save)
-        else:
-            return False
+        return False
 
     def _try_savepagenow(self, wp):
         try:
