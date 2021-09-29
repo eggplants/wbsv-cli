@@ -26,45 +26,61 @@ def check_connectivity(url="www.google.com", timeout=3):
 
 def check_natural(v):
     if int(v) < 0:
-        raise argparse.ArgumentTypeError(
-            "%s is an invalid natural number" % int(v))
+        raise argparse.ArgumentTypeError("%s is an invalid natural number" % int(v))
     return int(v)
 
 
 def check_positive(v):
     if int(v) <= 0:
-        raise argparse.ArgumentTypeError(
-            "%s is an invalid natural number" % int(v))
+        raise argparse.ArgumentTypeError("%s is an invalid natural number" % int(v))
     return int(v)
 
 
 def parse_args(test=None):
     """Parse arguments."""
     parser = argparse.ArgumentParser(
-        prog='wbsv',
+        prog="wbsv",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=textwrap.dedent('''\
+        description=textwrap.dedent(
+            """\
             CLI tool for save webpage on Wayback Machine forever.
-            Save webpage and one 's all URI(s) on Wayback Machine.'''),
-        epilog=textwrap.dedent('''\
+            Save webpage and one 's all URI(s) on Wayback Machine."""
+        ),
+        epilog=textwrap.dedent(
+            """\
             If you don't give the URL,
             interactive mode will be launched.
             (To quit interactive mode,
             type "end", "exit", "exit()",
-            "break", "bye", ":q" or "finish".)'''))
+            "break", "bye", ":q" or "finish".)"""
+        ),
+    )
 
-    parser.add_argument('url', metavar='url', nargs='*', type=str,
-                        help='Saving pages in order.')
-    parser.add_argument('-r', '--retry', type=check_natural,
-                        metavar='times', default=0,
-                        help='Set a retry limit on failed save.(>=0')
-    parser.add_argument('-t', '--only_target', action='store_true',
-                        help='Save just target webpage(s).')
-    parser.add_argument('-l', '--level', type=check_positive,
-                        metavar='level', default=1,
-                        help='Set maximum recursion depth. (>0)')
-    parser.add_argument('-V', '--version', action='version',
-                        version='%(prog)s {}'.format(__version__))
+    parser.add_argument(
+        "url", metavar="url", nargs="*", type=str, help="Saving pages in order."
+    )
+    parser.add_argument(
+        "-r",
+        "--retry",
+        type=check_natural,
+        metavar="times",
+        default=0,
+        help="Set a retry limit on failed save.(>=0",
+    )
+    parser.add_argument(
+        "-t", "--only_target", action="store_true", help="Save just target webpage(s)."
+    )
+    parser.add_argument(
+        "-l",
+        "--level",
+        type=check_positive,
+        metavar="level",
+        default=1,
+        help="Set maximum recursion depth. (>0)",
+    )
+    parser.add_argument(
+        "-V", "--version", action="version", version="%(prog)s {}".format(__version__)
+    )
     if test:
         return parser.parse_args(test)
     else:
@@ -73,14 +89,14 @@ def parse_args(test=None):
 
 def usual(args):
     past, now, fail = 0, 0, 0
-    print('[+]Target: {}'.format(args.url))
+    print("[+]Target: {}".format(args.url))
     c = Clawler(args)
     retrieved_links = set().union(*c.run_crawl())
     len_links = len(retrieved_links)
-    print('[+]{} URI(s) found.'.format(len_links))
+    print("[+]{} URI(s) found.".format(len_links))
     a = Archiver(args)
     for ind, link in enumerate(retrieved_links, 1):
-        print('[{:02d}/{}]: Wait...'.format(ind, len_links, link), end='\r')
+        print("[{:02d}/{}]: Wait...".format(ind, len_links), end="\r")
         archive = a.archive(link)
         if archive:
             archived_link, cached_flag = archive
@@ -88,34 +104,31 @@ def usual(args):
             past += inc[0]
             now += inc[1]
         else:
-            print('[{:02d}/{}]: <FAIL> {}'.format(ind, len_links, link))
+            print("[{:02d}/{}]: <FAIL> {}".format(ind, len_links, link))
             fail += 1
 
-    print('[+]FIN!: {}'.format(args.url))
-    print('[+]ALL: {}, NOW: {}, PAST: {}, FAIL: {}'.format(
-        len_links, now, past, fail))
+    print("[+]FIN!: {}".format(args.url))
+    print("[+]ALL: {}, NOW: {}, PAST: {}, FAIL: {}".format(len_links, now, past, fail))
 
 
 def cache_or_now(ind, len_links, archived_link, cached_flag):
     if cached_flag:
-        print('[{:02d}/{}]: <PAST> {}'.format(ind, len_links, archived_link))
+        print("[{:02d}/{}]: <PAST> {}".format(ind, len_links, archived_link))
         return (1, 0)
     else:
-        print('[{:02d}/{}]: <NOW> {}'.format(ind, len_links, archived_link))
+        print("[{:02d}/{}]: <NOW> {}".format(ind, len_links, archived_link))
         return (0, 1)
 
 
 def repl(args):
-    finish_words = [
-        'end', 'exit', 'exit()', 'break', 'bye', ':q', 'finish'
-    ]
-    print('[[Input a target url (ex: https://google.com)]]')
+    finish_words = ["end", "exit", "exit()", "break", "bye", ":q", "finish"]
+    print("[[Input a target url (ex: https://google.com)]]")
     while True:
-        link = input('>>> ').rstrip()
+        link = input(">>> ").rstrip()
         if link in finish_words:
-            print('[+]End.')
+            print("[+]End.")
             break
-        elif link == '':
+        elif link == "":
             pass
         else:
             args.url = [link]
@@ -135,5 +148,5 @@ def main():
         usual(args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

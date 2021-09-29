@@ -16,8 +16,7 @@ class Clawler:
         self.only_target = args.only_target
         self.level = args.level
         self.queue = []
-        self.UA = 'Mozilla/5.0 (Windows NT 5.1; rv:40.0) '\
-                  'Gecko/20100101 Firefox/40.0'
+        self.UA = "Mozilla/5.0 (Windows NT 5.1; rv:40.0) " "Gecko/20100101 Firefox/40.0"
 
     def run_crawl(self):
         """Execute clawler."""
@@ -35,11 +34,11 @@ class Clawler:
         if now_level == 0:
             self.queue.append(set(self.urls))
         for url in self.queue[-1]:
-            source = requests.get(
-                url, headers={'User-Agent': self.UA}).content
+            source = requests.get(url, headers={"User-Agent": self.UA}).content
             data = BS(source, parser="html.parser", features="lxml")
-            extracted_url = [urljoin(url, _.get('href'))
-                             for _ in set(data.find_all('a'))]
+            extracted_url = [
+                urljoin(url, _.get("href")) for _ in set(data.find_all("a"))
+            ]
             collecting_links |= set(self._normalize_url(extracted_url))
         self.queue.append(collecting_links - collected_links)
 
@@ -50,9 +49,9 @@ class Clawler:
             parsed_url = urlparse(url)
             if self._check_schema_is_invalid(parsed_url):
                 warn(
-                    '{}: schema {} is not valid.'.format(
-                        url, parsed_url.scheme),
-                    MissingURLSchemaWarning)
+                    "{}: schema {} is not valid.".format(url, parsed_url.scheme),
+                    MissingURLSchemaWarning,
+                )
             else:
                 valid_urls.append(parsed_url.geturl())
         return valid_urls
@@ -60,5 +59,5 @@ class Clawler:
     @staticmethod
     def _check_schema_is_invalid(parsed_url):
         """Judge if given url has a valid schema."""
-        is_invalid = parsed_url.scheme not in ('http', 'https', 'ftp', 'file')
-        return parsed_url.scheme == '' or is_invalid
+        is_invalid = parsed_url.scheme not in ("http", "https", "ftp", "file")
+        return parsed_url.scheme == "" or is_invalid

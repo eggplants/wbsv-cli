@@ -1,7 +1,6 @@
 # `wbsv`
 
-[![PyPI version](https://badge.fury.io/py/wbsv.svg)](https://badge.fury.io/py/wbsv) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/4914becc1f8f409dbc9f4a2020ab2e17)](https://www.codacy.com/manual/eggplants/wbsv-cli?utm_source=github.com&utm_medium=referral&utm_content=eggplants/wbsv-cli&utm_campaign=Badge_Grade) [![Maintainability](https://api.codeclimate.com/v1/badges/ce84fc17ef2b182eda26/maintainability)](https://codeclimate.com/github/eggplants/wbsv-cli/maintainability) [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
-[![Downloads](https://pepy.tech/badge/wbsv)](https://pepy.tech/project/wbsv) [![Downloads](https://pepy.tech/badge/wbsv/month)](https://pepy.tech/project/wbsv/month) [![Downloads](https://pepy.tech/badge/wbsv/week)](https://pepy.tech/project/wbsv/week)
+[![PyPI version](https://badge.fury.io/py/wbsv.svg)](https://badge.fury.io/py/wbsv) [![Maintainability](https://api.codeclimate.com/v1/badges/ce84fc17ef2b182eda26/maintainability)](https://codeclimate.com/github/eggplants/wbsv-cli/maintainability)
 
 ## `wbsv`(stands for "WayBack machine SavepageNow") is…
 
