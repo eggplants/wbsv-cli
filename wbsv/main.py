@@ -80,7 +80,7 @@ def usual(args):
     print('[+]{} URI(s) found.'.format(len_links))
     a = Archiver(args)
     for ind, link in enumerate(retrieved_links, 1):
-        print('[{:02d}/{}]: Wait...', end='\r')
+        print('[{:02d}/{}]: Wait...'.format(ind, len_links, link), end='\r')
         archive = a.archive(link)
         if archive:
             archived_link, cached_flag = archive
