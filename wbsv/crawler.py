@@ -35,7 +35,7 @@ class Clawler:
             self.queue.append(set(self.urls))
         for url in self.queue[-1]:
             source = requests.get(url, headers={"User-Agent": self.UA}).content
-            data = BS(source, parser="html.parser", features="lxml")
+            data = BS(source, features="lxml")
             extracted_url = [
                 urljoin(url, _.get("href")) for _ in set(data.find_all("a"))
             ]
@@ -47,12 +47,7 @@ class Clawler:
         valid_urls = []
         for url in urls:
             parsed_url = urlparse(url)
-            if self._check_schema_is_invalid(parsed_url):
-                warn(
-                    "{}: schema {} is not valid.".format(url, parsed_url.scheme),
-                    MissingURLSchemaWarning,
-                )
-            else:
+            if not self._check_schema_is_invalid(parsed_url):
                 valid_urls.append(parsed_url.geturl())
         return valid_urls
 

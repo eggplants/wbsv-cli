@@ -138,7 +138,7 @@ def repl(args):
                 print(e, file=sys.stderr)
 
 
-def main():
+def _main():
     if not check_connectivity():
         raise HttpConnectionNotFountError
     args = parse_args()
@@ -146,6 +146,13 @@ def main():
         repl(args)
     else:
         usual(args)
+
+
+def main():
+    try:
+        _main()
+    except KeyboardInterrupt:
+        exit(1)
 
 
 if __name__ == "__main__":
