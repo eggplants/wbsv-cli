@@ -79,6 +79,12 @@ def parse_args(test=None):
         help="Set maximum recursion depth. (>0)",
     )
     parser.add_argument(
+        "-O",
+        "--own",
+        action='store_true',
+        help="Only URLs with the same domain as target",
+    )
+    parser.add_argument(
         "-V", "--version", action="version", version="%(prog)s {}".format(__version__)
     )
     if test:

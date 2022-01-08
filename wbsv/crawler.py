@@ -12,7 +12,9 @@ class MissingURLSchemaWarning(UserWarning):
 class Clawler:
     def __init__(self, args):
         """Init."""
-        self.urls = self._normalize_url(args.url)
+        self.urls = self._normalize_url(args.url, skip=True)
+        self.own = args.own
+        self.target_domains = [urlparse(u).netloc for u in self.urls]
         self.only_target = args.only_target
         self.level = args.level
         self.queue = []
@@ -42,11 +44,13 @@ class Clawler:
             collecting_links |= set(self._normalize_url(extracted_url))
         self.queue.append(collecting_links - collected_links)
 
-    def _normalize_url(self, urls):
+    def _normalize_url(self, urls, skip=False):
         """Normalize url."""
         valid_urls = []
         for url in urls:
             parsed_url = urlparse(url)
+            if not skip and self.own and parsed_url.netloc not in self.target_domains:
+                continue
             if not self._check_schema_is_invalid(parsed_url):
                 valid_urls.append(urldefrag(parsed_url.geturl()).url)
         return valid_urls
