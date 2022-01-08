@@ -1,4 +1,4 @@
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urldefrag, urljoin, urlparse
 from warnings import warn
 
 import requests
@@ -48,7 +48,7 @@ class Clawler:
         for url in urls:
             parsed_url = urlparse(url)
             if not self._check_schema_is_invalid(parsed_url):
-                valid_urls.append(parsed_url.geturl())
+                valid_urls.append(urldefrag(parsed_url.geturl()).url)
         return valid_urls
 
     @staticmethod
