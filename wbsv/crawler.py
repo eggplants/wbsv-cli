@@ -9,7 +9,7 @@ class MissingURLSchemaWarning(UserWarning):
     pass
 
 
-class Clawler:
+class Crawler:
     def __init__(self, args):
         """Init."""
         self.urls = self._normalize_url(args.url, skip=True)
@@ -21,7 +21,7 @@ class Clawler:
         self.UA = "Mozilla/5.0 (Windows NT 5.1; rv:40.0) " "Gecko/20100101 Firefox/40.0"
 
     def run_crawl(self):
-        """Execute clawler."""
+        """Execute crawler."""
         if self.only_target:
             return [set(self.urls)]
         for now_level in range(self.level):
@@ -30,7 +30,7 @@ class Clawler:
         return self.queue
 
     def _crawl(self, now_level):
-        """Helper for clawling."""
+        """Helper for crawling."""
         collecting_links = set()
         collected_links = set().union(*self.queue)
         if now_level == 0:
