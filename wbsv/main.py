@@ -6,7 +6,7 @@ import textwrap
 
 from wbsv import __version__
 from wbsv.archiver import Archiver
-from wbsv.crawler import Clawler
+from wbsv.crawler import Crawler
 
 
 class HttpConnectionNotFountError(Exception):
@@ -96,7 +96,7 @@ def parse_args(test=None):
 def usual(args):
     past, now, fail = 0, 0, 0
     print("[+]Target: {}".format(args.url))
-    c = Clawler(args)
+    c = Crawler(args)
     retrieved_links = set().union(*c.run_crawl())
     len_links = len(retrieved_links)
     print("[+]{} URI(s) found.".format(len_links))
