@@ -3,6 +3,7 @@ import argparse
 import http.client as httplib
 import sys
 import textwrap
+from typing import List, Optional, Tuple
 
 from wbsv import __version__
 from wbsv.archiver import Archiver
@@ -13,7 +14,7 @@ class HttpConnectionNotFountError(Exception):
     pass
 
 
-def check_connectivity(url="www.google.com", timeout=3):
+def check_connectivity(url: str = "www.google.com", timeout: int = 3):
     conn = httplib.HTTPConnection(url, timeout=timeout)
     try:
         conn.request("HEAD", "/")
@@ -24,19 +25,19 @@ def check_connectivity(url="www.google.com", timeout=3):
         return False
 
 
-def check_natural(v):
+def check_natural(v: str):
     if int(v) < 0:
         raise argparse.ArgumentTypeError("%s is an invalid natural number" % int(v))
     return int(v)
 
 
-def check_positive(v):
+def check_positive(v: str):
     if int(v) <= 0:
         raise argparse.ArgumentTypeError("%s is an invalid natural number" % int(v))
     return int(v)
 
 
-def parse_args(test=None):
+def parse_args(args_list: Optional[List[str]] = None):
     """Parse arguments."""
     parser = argparse.ArgumentParser(
         prog="wbsv",
@@ -87,8 +88,8 @@ def parse_args(test=None):
     parser.add_argument(
         "-V", "--version", action="version", version="%(prog)s {}".format(__version__)
     )
-    if test:
-        return parser.parse_args(test)
+    if args_list:
+        return parser.parse_args(args_list)
     else:
         return parser.parse_args()
 
@@ -98,7 +99,7 @@ def usual(args):
     print("[+]Target: {}".format(args.url))
     c = Crawler(args)
     retrieved_links = set().union(*c.run_crawl())
-    len_links = len(retrieved_links)
+    len_links: int = len(retrieved_links)
     print("[+]{} URI(s) found.".format(len_links))
     a = Archiver(args)
     for ind, link in enumerate(retrieved_links, 1):
@@ -117,13 +118,13 @@ def usual(args):
     print("[+]ALL: {}, NOW: {}, PAST: {}, FAIL: {}".format(len_links, now, past, fail))
 
 
-def cache_or_now(ind, len_links, archived_link, cached_flag):
+def cache_or_now(ind, len_links: int, archived_link: str, cached_flag: bool) -> Tuple[int, int]:
     if cached_flag:
         print("[{:02d}/{}]: <PAST> {}".format(ind, len_links, archived_link))
-        return (1, 0)
+        return 1, 0
     else:
         print("[{:02d}/{}]: <NOW> {}".format(ind, len_links, archived_link))
-        return (0, 1)
+        return 0, 1
 
 
 def repl(args):

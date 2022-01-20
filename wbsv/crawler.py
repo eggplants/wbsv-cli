@@ -1,5 +1,5 @@
+from typing import List
 from urllib.parse import urldefrag, urljoin, urlparse
-from warnings import warn
 
 import requests
 from bs4 import BeautifulSoup as BS
@@ -17,8 +17,8 @@ class Crawler:
         self.target_domains = [urlparse(u).netloc for u in self.urls]
         self.only_target = args.only_target
         self.level = args.level
-        self.queue = []
-        self.UA = "Mozilla/5.0 (Windows NT 5.1; rv:40.0) " "Gecko/20100101 Firefox/40.0"
+        self.queue: List = []
+        self.UA: str = "Mozilla/5.0 (Windows NT 5.1; rv:40.0) " "Gecko/20100101 Firefox/40.0"
 
     def run_crawl(self):
         """Execute crawler."""
@@ -44,7 +44,7 @@ class Crawler:
             collecting_links |= set(self._normalize_url(extracted_url))
         self.queue.append(collecting_links - collected_links)
 
-    def _normalize_url(self, urls, skip=False):
+    def _normalize_url(self, urls, skip: bool = False):
         """Normalize url."""
         valid_urls = []
         for url in urls:
