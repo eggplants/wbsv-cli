@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Iterable
 from urllib.parse import urldefrag, urljoin, urlparse
 
 import requests
@@ -10,13 +10,29 @@ class MissingURLSchemaWarning(UserWarning):
 
 
 class Crawler:
-    def __init__(self, args):
+    @staticmethod
+    def from_parser_args(args):
+        return Crawler.from_args(args.url, args.own, args.only_target, args.level)
+
+    @staticmethod
+    def from_args(urls: Iterable[str], own: bool, only_target: bool, level: int):
+        normalized_urls = Crawler._normalize_urls_static_init(urls)
+        target_domains = {urlparse(u).netloc for u in normalized_urls} if own else set()
+        return Crawler(
+            urls=normalized_urls,
+            own=own,
+            target_domains=target_domains,
+            only_target=only_target,
+            level=level
+        )
+
+    def __init__(self, urls, own, target_domains, only_target, level):
         """Init."""
-        self.urls = self._normalize_url(args.url, skip=True)
-        self.own = args.own
-        self.target_domains = [urlparse(u).netloc for u in self.urls]
-        self.only_target = args.only_target
-        self.level = args.level
+        self.urls = urls
+        self.own = own
+        self.target_domains = target_domains
+        self.only_target = only_target
+        self.level = level
         self.queue: List = []
         self.UA: str = "Mozilla/5.0 (Windows NT 5.1; rv:40.0) " "Gecko/20100101 Firefox/40.0"
 
@@ -38,25 +54,37 @@ class Crawler:
         for url in self.queue[-1]:
             source = requests.get(url, headers={"User-Agent": self.UA}).content
             data = BS(source, features="lxml")
-            extracted_url = [
+            extracted_urls = [
                 urljoin(url, _.get("href")) for _ in set(data.find_all("a"))
             ]
-            collecting_links |= set(self._normalize_url(extracted_url))
+            collecting_links |= set(
+                Crawler._normalize_urls_static(extracted_urls, own=self.own, target_domains=self.target_domains)
+            )
         self.queue.append(collecting_links - collected_links)
 
-    def _normalize_url(self, urls, skip: bool = False):
+    @staticmethod
+    def _normalize_urls_static(urls: Iterable[str], own: bool, target_domains: Iterable[str]):
         """Normalize url."""
         valid_urls = []
         for url in urls:
             parsed_url = urlparse(url)
-            if not skip and self.own and parsed_url.netloc not in self.target_domains:
-                continue
-            if not self._check_schema_is_invalid(parsed_url):
+            if own:
+                if parsed_url.netloc not in target_domains:
+                    continue
+            if Crawler._check_schema_is_valid(parsed_url):
                 valid_urls.append(urldefrag(parsed_url.geturl()).url)
         return valid_urls
 
     @staticmethod
-    def _check_schema_is_invalid(parsed_url):
+    def _normalize_urls_static_init(urls: Iterable[str]):
+        valid_urls = []
+        for url in urls:
+            parsed_url = urlparse(url)
+            if Crawler._check_schema_is_valid(parsed_url):
+                valid_urls.append(urldefrag(parsed_url.geturl()).url)
+        return valid_urls
+
+    @staticmethod
+    def _check_schema_is_valid(parsed_url):
         """Judge if given url has a valid schema."""
-        is_invalid = parsed_url.scheme not in ("http", "https", "ftp", "file")
-        return parsed_url.scheme == "" or is_invalid
+        return parsed_url.scheme in {"http", "https", "ftp", "file"}

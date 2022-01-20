@@ -9,9 +9,14 @@ class SavepagenowFailureError(Exception):
 
 
 class Archiver:
-    def __init__(self, args):
+
+    @staticmethod
+    def from_parser_args(args):
+        return Archiver(args.retry)
+
+    def __init__(self, retry: int):
         """Init."""
-        self.retry: int = args.retry
+        self.retry: int = retry
         self.UA: str = "Mozilla/5.0 (Windows NT 5.1; rv:40.0) " "Gecko/20100101 Firefox/40.0"
 
     def archive(self, url) -> Union[bool, Tuple[str, bool]]:
