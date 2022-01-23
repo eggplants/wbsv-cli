@@ -3,7 +3,7 @@ import argparse
 import http.client as httplib
 import sys
 import textwrap
-from typing import Iterable, List, Optional, Set, Tuple
+from typing import Iterable, List, Optional, Set
 
 from wbsv import __version__
 from wbsv.archiver import Archiver
@@ -86,7 +86,7 @@ def parse_args(args_list: Optional[List[str]] = None) -> argparse.Namespace:
         help="Only URLs with the same domain as target",
     )
     parser.add_argument(
-        "-V", "--version", action="version", version="%(prog)s {}".format(__version__)
+        "-V", "--version", action="version", version=f"%(prog)s {__version__}"
     )
     if args_list:
         return parser.parse_args(args_list)
@@ -98,42 +98,36 @@ def wbsv(
     urls: Iterable[str], own: bool, only_target: bool, level: int, retry: int
 ) -> None:
     past, now, fail = 0, 0, 0
-    print("[+]Target: {}".format(urls))
+    print(f"[+]Target: {urls}")
     c = Crawler.from_args(urls=urls, own=own, only_target=only_target, level=level)
     retrieved_links_empty_set: Set[str] = set()  # required for mypy type checking
     retrieved_links: Set[str] = retrieved_links_empty_set.union(*c.run_crawl())
     len_links: int = len(retrieved_links)
-    print("[+]{} URI(s) found.".format(len_links))
+    len_len_links: int = len(str(len_links))
+    print(f"[+]{len_links} URI(s) found.")
     a = Archiver(retry)
     for ind, link in enumerate(retrieved_links, 1):
-        print("[{:02d}/{}]: Wait...".format(ind, len_links), end="\r")
+        print(f"[{ind:0{len_len_links}d}/{len_links}]: Wait...", end="\r")
         archive = a.archive(link)
         if archive:
             archived_link, cached_flag = archive
-            inc = cache_or_now(ind, len_links, archived_link, cached_flag)
+            cache_or_now: str = "PAST" if cached_flag else "NOW"
+            print(
+                f"[{ind:0{len_len_links}d}/{len_links}]: <{cache_or_now}> {archived_link}"
+            )
+            inc = (1, 0) if cached_flag else (0, 1)
             past += inc[0]
             now += inc[1]
         else:
-            print("[{:02d}/{}]: <FAIL> {}".format(ind, len_links, link))
+            print(f"[{ind:0{len_len_links}d}/{len_links}]: <FAIL> {link}")
             fail += 1
 
-    print("[+]FIN!: {}".format(urls))
-    print("[+]ALL: {}, NOW: {}, PAST: {}, FAIL: {}".format(len_links, now, past, fail))
+    print(f"[+]FIN!: {urls}")
+    print(f"[+]ALL: {len_links}, NOW: {now}, PAST: {past}, FAIL: {fail}")
 
 
 def wbsv_from_parser_args(args: argparse.Namespace) -> None:
     wbsv(args.url, args.own, args.only_target, args.level, args.retry)
-
-
-def cache_or_now(
-    ind: int, len_links: int, archived_link: str, cached_flag: bool
-) -> Tuple[int, int]:
-    if cached_flag:
-        print("[{:02d}/{}]: <PAST> {}".format(ind, len_links, archived_link))
-        return 1, 0
-    else:
-        print("[{:02d}/{}]: <NOW> {}".format(ind, len_links, archived_link))
-        return 0, 1
 
 
 def wbsv_repl(args: argparse.Namespace) -> None:
@@ -144,9 +138,7 @@ def wbsv_repl(args: argparse.Namespace) -> None:
         if link in finish_words:
             print("[+]End.")
             break
-        elif link == "":
-            pass
-        else:
+        elif link != "":
             args.url = [link]
             try:
                 wbsv_from_parser_args(args)
