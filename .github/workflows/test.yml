@@ -14,9 +14,9 @@ jobs:
       CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 1
+	  fail-fast: false
       matrix:
-        fail-fast: false
-        max-parallel: 1
         python-version: [3.7, 3.8, 3.9, "3.10"]
     steps:
       - name: Checkout Repository
