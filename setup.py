@@ -12,7 +12,7 @@ setup(
     url="https://github.com/eggplants/wbsv-cli",
     author="eggplants",
     packages=find_packages(),
-    python_requires=">=3.5",
+    python_requires=">=3.7",
     include_package_data=True,
     license="MIT",
     install_requires=open("requirements.txt").read().splitlines(),

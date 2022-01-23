@@ -3,6 +3,7 @@ import argparse
 import http.client as httplib
 import sys
 import textwrap
+from typing import List, Optional, Tuple, Iterable, Set
 
 from wbsv import __version__
 from wbsv.archiver import Archiver
@@ -13,7 +14,7 @@ class HttpConnectionNotFountError(Exception):
     pass
 
 
-def check_connectivity(url="www.google.com", timeout=3):
+def check_connectivity(url: str = "www.google.com", timeout: int = 3) -> bool:
     conn = httplib.HTTPConnection(url, timeout=timeout)
     try:
         conn.request("HEAD", "/")
@@ -24,19 +25,19 @@ def check_connectivity(url="www.google.com", timeout=3):
         return False
 
 
-def check_natural(v):
+def check_natural(v: str) -> int:
     if int(v) < 0:
         raise argparse.ArgumentTypeError("%s is an invalid natural number" % int(v))
     return int(v)
 
 
-def check_positive(v):
+def check_positive(v: str) -> int:
     if int(v) <= 0:
         raise argparse.ArgumentTypeError("%s is an invalid natural number" % int(v))
     return int(v)
 
 
-def parse_args(test=None):
+def parse_args(args_list: Optional[List[str]] = None) -> argparse.Namespace:
     """Parse arguments."""
     parser = argparse.ArgumentParser(
         prog="wbsv",
@@ -81,26 +82,29 @@ def parse_args(test=None):
     parser.add_argument(
         "-O",
         "--own",
-        action='store_true',
+        action="store_true",
         help="Only URLs with the same domain as target",
     )
     parser.add_argument(
         "-V", "--version", action="version", version="%(prog)s {}".format(__version__)
     )
-    if test:
-        return parser.parse_args(test)
+    if args_list:
+        return parser.parse_args(args_list)
     else:
         return parser.parse_args()
 
 
-def usual(args):
+def wbsv(
+    urls: Iterable[str], own: bool, only_target: bool, level: int, retry: int
+) -> None:
     past, now, fail = 0, 0, 0
-    print("[+]Target: {}".format(args.url))
-    c = Crawler(args)
-    retrieved_links = set().union(*c.run_crawl())
-    len_links = len(retrieved_links)
+    print("[+]Target: {}".format(urls))
+    c = Crawler.from_args(urls=urls, own=own, only_target=only_target, level=level)
+    retrieved_links_empty_set: Set[str] = set()  # required for mypy type checking
+    retrieved_links: Set[str] = retrieved_links_empty_set.union(*c.run_crawl())
+    len_links: int = len(retrieved_links)
     print("[+]{} URI(s) found.".format(len_links))
-    a = Archiver(args)
+    a = Archiver(retry)
     for ind, link in enumerate(retrieved_links, 1):
         print("[{:02d}/{}]: Wait...".format(ind, len_links), end="\r")
         archive = a.archive(link)
@@ -113,21 +117,27 @@ def usual(args):
             print("[{:02d}/{}]: <FAIL> {}".format(ind, len_links, link))
             fail += 1
 
-    print("[+]FIN!: {}".format(args.url))
+    print("[+]FIN!: {}".format(urls))
     print("[+]ALL: {}, NOW: {}, PAST: {}, FAIL: {}".format(len_links, now, past, fail))
 
 
-def cache_or_now(ind, len_links, archived_link, cached_flag):
+def wbsv_from_parser_args(args: argparse.Namespace) -> None:
+    wbsv(args.url, args.own, args.only_target, args.level, args.retry)
+
+
+def cache_or_now(
+    ind: int, len_links: int, archived_link: str, cached_flag: bool
+) -> Tuple[int, int]:
     if cached_flag:
         print("[{:02d}/{}]: <PAST> {}".format(ind, len_links, archived_link))
-        return (1, 0)
+        return 1, 0
     else:
         print("[{:02d}/{}]: <NOW> {}".format(ind, len_links, archived_link))
-        return (0, 1)
+        return 0, 1
 
 
-def repl(args):
-    finish_words = ["end", "exit", "exit()", "break", "bye", ":q", "finish"]
+def wbsv_repl(args: argparse.Namespace) -> None:
+    finish_words = ("end", "exit", "exit()", "break", "bye", ":q", "finish")
     print("[[Input a target url (ex: https://google.com)]]")
     while True:
         link = input(">>> ").rstrip()
@@ -139,22 +149,22 @@ def repl(args):
         else:
             args.url = [link]
             try:
-                usual(args)
+                wbsv_from_parser_args(args)
             except Exception as e:
                 print(e, file=sys.stderr)
 
 
-def _main():
+def _main() -> None:
     if not check_connectivity():
         raise HttpConnectionNotFountError
     args = parse_args()
     if len(sys.argv) <= 1:
-        repl(args)
+        wbsv_repl(args)
     else:
-        usual(args)
+        wbsv_from_parser_args(args)
 
 
-def main():
+def main() -> None:
     try:
         _main()
     except KeyboardInterrupt:

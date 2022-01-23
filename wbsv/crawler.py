@@ -1,8 +1,11 @@
+from argparse import Namespace
+from typing import List, Iterable, Set
 from urllib.parse import urldefrag, urljoin, urlparse
-from warnings import warn
 
 import requests
-from bs4 import BeautifulSoup as BS
+from bs4 import BeautifulSoup as BS  # type: ignore
+
+from wbsv.url_filters import SchemaFilter, CombinedFilter, OwnDomainFilter, UrlFilter
 
 
 class MissingURLSchemaWarning(UserWarning):
@@ -10,17 +13,42 @@ class MissingURLSchemaWarning(UserWarning):
 
 
 class Crawler:
-    def __init__(self, args):
-        """Init."""
-        self.urls = self._normalize_url(args.url, skip=True)
-        self.own = args.own
-        self.target_domains = [urlparse(u).netloc for u in self.urls]
-        self.only_target = args.only_target
-        self.level = args.level
-        self.queue = []
-        self.UA = "Mozilla/5.0 (Windows NT 5.1; rv:40.0) " "Gecko/20100101 Firefox/40.0"
+    @staticmethod
+    def from_parser_args(args: Namespace) -> "Crawler":
+        return Crawler.from_args(args.url, args.own, args.only_target, args.level)
 
-    def run_crawl(self):
+    @staticmethod
+    def from_args(
+        urls: Iterable[str], own: bool, only_target: bool, level: int
+    ) -> "Crawler":
+        schema_filter = SchemaFilter()
+        normalized_urls = Crawler._normalize_urls(urls, schema_filter)
+        domain_filters = (
+            [schema_filter, OwnDomainFilter.from_string_urls(set(normalized_urls))]
+            if own
+            else [schema_filter]
+        )
+        return Crawler(
+            urls=normalized_urls,
+            domain_filter=CombinedFilter(domain_filters),
+            only_target=only_target,
+            level=level,
+        )
+
+    def __init__(
+        self, urls: List[str], domain_filter: UrlFilter, only_target: bool, level: int
+    ):
+        """Init."""
+        self.urls = urls
+        self.domain_filter = domain_filter
+        self.only_target = only_target
+        self.level = level
+        self.queue: List[Set[str]] = []
+        self.UA: str = (
+            "Mozilla/5.0 (Windows NT 5.1; rv:40.0) " "Gecko/20100101 Firefox/40.0"
+        )
+
+    def run_crawl(self) -> List[Set[str]]:
         """Execute crawler."""
         if self.only_target:
             return [set(self.urls)]
@@ -29,34 +57,30 @@ class Crawler:
 
         return self.queue
 
-    def _crawl(self, now_level):
+    def _crawl(self, now_level: int) -> None:
         """Helper for crawling."""
         collecting_links = set()
-        collected_links = set().union(*self.queue)
+        collected_links_empty_set: Set[str] = set()  # required for mypy type checking
+        collected_links: Set[str] = collected_links_empty_set.union(*self.queue)
         if now_level == 0:
             self.queue.append(set(self.urls))
         for url in self.queue[-1]:
             source = requests.get(url, headers={"User-Agent": self.UA}).content
             data = BS(source, features="lxml")
-            extracted_url = [
+            extracted_urls = [
                 urljoin(url, _.get("href")) for _ in set(data.find_all("a"))
             ]
-            collecting_links |= set(self._normalize_url(extracted_url))
+            collecting_links |= set(
+                Crawler._normalize_urls(extracted_urls, url_filter=self.domain_filter)
+            )
         self.queue.append(collecting_links - collected_links)
 
-    def _normalize_url(self, urls, skip=False):
-        """Normalize url."""
+    @staticmethod
+    def _normalize_urls(urls: Iterable[str], url_filter: UrlFilter) -> List[str]:
+        """Normalize parsed_url."""
         valid_urls = []
         for url in urls:
             parsed_url = urlparse(url)
-            if not skip and self.own and parsed_url.netloc not in self.target_domains:
-                continue
-            if not self._check_schema_is_invalid(parsed_url):
+            if url_filter.test_url(parsed_url):
                 valid_urls.append(urldefrag(parsed_url.geturl()).url)
         return valid_urls
-
-    @staticmethod
-    def _check_schema_is_invalid(parsed_url):
-        """Judge if given url has a valid schema."""
-        is_invalid = parsed_url.scheme not in ("http", "https", "ftp", "file")
-        return parsed_url.scheme == "" or is_invalid
