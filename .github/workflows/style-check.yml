@@ -11,7 +11,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -U pip
-          pip insatll -e .
+          pip install -e .
       - name: Run black
         run: |
           black --diff wbsv test
