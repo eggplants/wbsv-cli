@@ -98,7 +98,8 @@ def wbsv(urls: Iterable[str], own: bool, only_target: bool, level: int, retry: i
     past, now, fail = 0, 0, 0
     print("[+]Target: {}".format(urls))
     c = Crawler.from_args(urls=urls, own=own, only_target=only_target, level=level)
-    retrieved_links: Set[Any] = set().union(*c.run_crawl())
+    retrieved_links_empty_set : Set[str] = set() #required for mypy type checking
+    retrieved_links: Set[str] = retrieved_links_empty_set.union(*c.run_crawl())
     len_links: int = len(retrieved_links)
     print("[+]{} URI(s) found.".format(len_links))
     a = Archiver(retry)
