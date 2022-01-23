@@ -23,7 +23,7 @@ class Archiver:
 
     def archive(self, url: str) -> Union[Literal[False], Tuple[str, bool]]:
         """Archive link."""
-        wp = waybackpy.Url(url, self.UA)
+        wp = waybackpy.WaybackMachineSaveAPI(url, self.UA)
         for _ in range(self.retry + 1):
             if not self._try_savepagenow(wp):
                 continue
