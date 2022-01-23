@@ -1,9 +1,17 @@
+from typing import Iterable, Set, TypedDict
 from urllib.parse import urlparse
 
 from wbsv import crawler, main
 
 # UrlFilter unit tests
 from wbsv.url_filters import OwnDomainFilter, SchemaFilter
+
+
+class ArgDict(TypedDict):
+    urls: Iterable[str]
+    own: bool
+    only_target: bool
+    level: int
 
 
 def test_schema_filter_should_reject_invalid_schema() -> None:
@@ -35,7 +43,7 @@ def test_own_domain_filter_should_accept_url_with_valid_domain() -> None:
 
 
 def test_api_without_parser() -> None:
-    args = {
+    args: ArgDict = {
         "urls": ["https://example.com"],
         "own": False,
         "only_target": False,
@@ -43,7 +51,8 @@ def test_api_without_parser() -> None:
     }
     c = crawler.Crawler.from_args(**args)
     urls = {"https://example.com", "https://www.iana.org/domains/example"}
-    t = set().union(*c.run_crawl())
+    t: Set[str] = set()
+    t = t.union(*c.run_crawl())
     if urls != t:
         raise AssertionError
 
@@ -52,6 +61,7 @@ def test1() -> None:
     args = main.parse_args(args_list=["https://example.com", "-l", "1"])
     c = crawler.Crawler.from_parser_args(args)
     urls = {"https://example.com", "https://www.iana.org/domains/example"}
-    t = set().union(*c.run_crawl())
+    t: Set[str] = set()
+    t = t.union(*c.run_crawl())
     if urls != t:
         raise AssertionError
