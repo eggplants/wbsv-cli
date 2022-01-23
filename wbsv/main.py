@@ -3,7 +3,7 @@ import argparse
 import http.client as httplib
 import sys
 import textwrap
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Iterable, Set, Any
 
 from wbsv import __version__
 from wbsv.archiver import Archiver
@@ -14,7 +14,7 @@ class HttpConnectionNotFountError(Exception):
     pass
 
 
-def check_connectivity(url: str = "www.google.com", timeout: int = 3):
+def check_connectivity(url: str = "www.google.com", timeout: int = 3) -> bool:
     conn = httplib.HTTPConnection(url, timeout=timeout)
     try:
         conn.request("HEAD", "/")
@@ -25,19 +25,19 @@ def check_connectivity(url: str = "www.google.com", timeout: int = 3):
         return False
 
 
-def check_natural(v: str):
+def check_natural(v: str) -> int:
     if int(v) < 0:
         raise argparse.ArgumentTypeError("%s is an invalid natural number" % int(v))
     return int(v)
 
 
-def check_positive(v: str):
+def check_positive(v: str) -> int:
     if int(v) <= 0:
         raise argparse.ArgumentTypeError("%s is an invalid natural number" % int(v))
     return int(v)
 
 
-def parse_args(args_list: Optional[List[str]] = None):
+def parse_args(args_list: Optional[List[str]] = None) -> argparse.Namespace:
     """Parse arguments."""
     parser = argparse.ArgumentParser(
         prog="wbsv",
@@ -94,11 +94,11 @@ def parse_args(args_list: Optional[List[str]] = None):
         return parser.parse_args()
 
 
-def wbsv(urls, own, only_target, level, retry) -> None:
+def wbsv(urls: Iterable[str], own: bool, only_target: bool, level: int, retry: int) -> None:
     past, now, fail = 0, 0, 0
     print("[+]Target: {}".format(urls))
     c = Crawler.from_args(urls=urls, own=own, only_target=only_target, level=level)
-    retrieved_links = set().union(*c.run_crawl())
+    retrieved_links: Set[Any] = set().union(*c.run_crawl())
     len_links: int = len(retrieved_links)
     print("[+]{} URI(s) found.".format(len_links))
     a = Archiver(retry)
@@ -118,11 +118,11 @@ def wbsv(urls, own, only_target, level, retry) -> None:
     print("[+]ALL: {}, NOW: {}, PAST: {}, FAIL: {}".format(len_links, now, past, fail))
 
 
-def wbsv_from_parser_args(args):
+def wbsv_from_parser_args(args: argparse.Namespace) -> None:
     wbsv(args.url, args.own, args.only_target, args.level, args.retry)
 
 
-def cache_or_now(ind, len_links: int, archived_link: str, cached_flag: bool) -> Tuple[int, int]:
+def cache_or_now(ind : int, len_links: int, archived_link: str, cached_flag: bool) -> Tuple[int, int]:
     if cached_flag:
         print("[{:02d}/{}]: <PAST> {}".format(ind, len_links, archived_link))
         return 1, 0
@@ -131,7 +131,7 @@ def cache_or_now(ind, len_links: int, archived_link: str, cached_flag: bool) -> 
         return 0, 1
 
 
-def wbsv_repl(args):
+def wbsv_repl(args: argparse.Namespace) -> None:
     finish_words = {"end", "exit", "exit()", "break", "bye", ":q", "finish"}
     print("[[Input a target url (ex: https://google.com)]]")
     while True:
@@ -149,7 +149,7 @@ def wbsv_repl(args):
                 print(e, file=sys.stderr)
 
 
-def _main():
+def _main() -> None:
     if not check_connectivity():
         raise HttpConnectionNotFountError
     args = parse_args()
@@ -159,7 +159,7 @@ def _main():
         wbsv_from_parser_args(args)
 
 
-def main():
+def main() -> None:
     try:
         _main()
     except KeyboardInterrupt:

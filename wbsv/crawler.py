@@ -1,4 +1,5 @@
-from typing import List, Iterable
+from argparse import Namespace
+from typing import List, Iterable, Set, AbstractSet, Union, Any
 from urllib.parse import urldefrag, urljoin, urlparse
 
 import requests
@@ -13,11 +14,11 @@ class MissingURLSchemaWarning(UserWarning):
 
 class Crawler:
     @staticmethod
-    def from_parser_args(args):
+    def from_parser_args(args: Namespace) -> 'Crawler':
         return Crawler.from_args(args.url, args.own, args.only_target, args.level)
 
     @staticmethod
-    def from_args(urls: Iterable[str], own: bool, only_target: bool, level: int):
+    def from_args(urls: Iterable[str], own: bool, only_target: bool, level: int) -> 'Crawler':
         schema_filter = SchemaFilter()
         normalized_urls = Crawler._normalize_urls(urls, schema_filter)
         domain_filters = [
@@ -31,16 +32,16 @@ class Crawler:
             level=level
         )
 
-    def __init__(self, urls: List, domain_filter: UrlFilter, only_target: bool, level: int):
+    def __init__(self, urls: List[str], domain_filter: UrlFilter, only_target: bool, level: int):
         """Init."""
         self.urls = urls
         self.domain_filter = domain_filter
         self.only_target = only_target
         self.level = level
-        self.queue: List = []
+        self.queue: List[Set[str]] = []
         self.UA: str = "Mozilla/5.0 (Windows NT 5.1; rv:40.0) " "Gecko/20100101 Firefox/40.0"
 
-    def run_crawl(self) -> List:
+    def run_crawl(self) -> List[Set[str]]:
         """Execute crawler."""
         if self.only_target:
             return [set(self.urls)]
@@ -49,10 +50,10 @@ class Crawler:
 
         return self.queue
 
-    def _crawl(self, now_level) -> None:
+    def _crawl(self, now_level: int) -> None:
         """Helper for crawling."""
         collecting_links = set()
-        collected_links = set().union(*self.queue)
+        collected_links: AbstractSet[Union[Any, None]] = set().union(*self.queue)
         if now_level == 0:
             self.queue.append(set(self.urls))
         for url in self.queue[-1]:
