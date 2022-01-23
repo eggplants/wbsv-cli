@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 from wbsv import crawler, main
 
 
-#UrlFilter unit tests
+# UrlFilter unit tests
 from wbsv.url_filters import SchemaFilter, OwnDomainFilter
 
 
@@ -30,14 +30,19 @@ def test_own_domain_filter_should_reject_url_with_invalid_domain():
 
 
 def test_own_domain_filter_should_accept_url_with_valid_domain():
-    own_domain_filter =  OwnDomainFilter.from_string_urls(["https://example.com"])
+    own_domain_filter = OwnDomainFilter.from_string_urls(["https://example.com"])
     invalid_domain_url = urlparse("https://example.com")
 
     assert own_domain_filter.test_url(invalid_domain_url) is True
 
 
 def test_api_without_parser():
-    args = {"urls": ["https://example.com"], "own": False, "only_target": False, "level": 1}
+    args = {
+        "urls": ["https://example.com"],
+        "own": False,
+        "only_target": False,
+        "level": 1,
+    }
     c = crawler.Crawler.from_args(**args)
     urls = {"https://example.com", "https://www.iana.org/domains/example"}
     t = set().union(*c.run_crawl())
@@ -52,4 +57,3 @@ def test1():
     t = set().union(*c.run_crawl())
     if urls != t:
         raise AssertionError
-

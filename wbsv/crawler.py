@@ -3,7 +3,7 @@ from typing import List, Iterable, Set
 from urllib.parse import urldefrag, urljoin, urlparse
 
 import requests
-from bs4 import BeautifulSoup as BS
+from bs4 import BeautifulSoup as BS  # type: ignore
 
 from wbsv.url_filters import SchemaFilter, CombinedFilter, OwnDomainFilter, UrlFilter
 
@@ -14,32 +14,39 @@ class MissingURLSchemaWarning(UserWarning):
 
 class Crawler:
     @staticmethod
-    def from_parser_args(args: Namespace) -> 'Crawler':
+    def from_parser_args(args: Namespace) -> "Crawler":
         return Crawler.from_args(args.url, args.own, args.only_target, args.level)
 
     @staticmethod
-    def from_args(urls: Iterable[str], own: bool, only_target: bool, level: int) -> 'Crawler':
+    def from_args(
+        urls: Iterable[str], own: bool, only_target: bool, level: int
+    ) -> "Crawler":
         schema_filter = SchemaFilter()
         normalized_urls = Crawler._normalize_urls(urls, schema_filter)
-        domain_filters = [
-            schema_filter,
-            OwnDomainFilter.from_string_urls(set(normalized_urls))
-        ] if own else [schema_filter]
+        domain_filters = (
+            [schema_filter, OwnDomainFilter.from_string_urls(set(normalized_urls))]
+            if own
+            else [schema_filter]
+        )
         return Crawler(
             urls=normalized_urls,
             domain_filter=CombinedFilter(domain_filters),
             only_target=only_target,
-            level=level
+            level=level,
         )
 
-    def __init__(self, urls: List[str], domain_filter: UrlFilter, only_target: bool, level: int):
+    def __init__(
+        self, urls: List[str], domain_filter: UrlFilter, only_target: bool, level: int
+    ):
         """Init."""
         self.urls = urls
         self.domain_filter = domain_filter
         self.only_target = only_target
         self.level = level
         self.queue: List[Set[str]] = []
-        self.UA: str = "Mozilla/5.0 (Windows NT 5.1; rv:40.0) " "Gecko/20100101 Firefox/40.0"
+        self.UA: str = (
+            "Mozilla/5.0 (Windows NT 5.1; rv:40.0) " "Gecko/20100101 Firefox/40.0"
+        )
 
     def run_crawl(self) -> List[Set[str]]:
         """Execute crawler."""

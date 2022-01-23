@@ -82,7 +82,7 @@ def parse_args(args_list: Optional[List[str]] = None) -> argparse.Namespace:
     parser.add_argument(
         "-O",
         "--own",
-        action='store_true',
+        action="store_true",
         help="Only URLs with the same domain as target",
     )
     parser.add_argument(
@@ -94,7 +94,9 @@ def parse_args(args_list: Optional[List[str]] = None) -> argparse.Namespace:
         return parser.parse_args()
 
 
-def wbsv(urls: Iterable[str], own: bool, only_target: bool, level: int, retry: int) -> None:
+def wbsv(
+    urls: Iterable[str], own: bool, only_target: bool, level: int, retry: int
+) -> None:
     past, now, fail = 0, 0, 0
     print("[+]Target: {}".format(urls))
     c = Crawler.from_args(urls=urls, own=own, only_target=only_target, level=level)
@@ -123,7 +125,9 @@ def wbsv_from_parser_args(args: argparse.Namespace) -> None:
     wbsv(args.url, args.own, args.only_target, args.level, args.retry)
 
 
-def cache_or_now(ind: int, len_links: int, archived_link: str, cached_flag: bool) -> Tuple[int, int]:
+def cache_or_now(
+    ind: int, len_links: int, archived_link: str, cached_flag: bool
+) -> Tuple[int, int]:
     if cached_flag:
         print("[{:02d}/{}]: <PAST> {}".format(ind, len_links, archived_link))
         return 1, 0
@@ -133,7 +137,7 @@ def cache_or_now(ind: int, len_links: int, archived_link: str, cached_flag: bool
 
 
 def wbsv_repl(args: argparse.Namespace) -> None:
-    finish_words = {"end", "exit", "exit()", "break", "bye", ":q", "finish"}
+    finish_words = ("end", "exit", "exit()", "break", "bye", ":q", "finish")
     print("[[Input a target url (ex: https://google.com)]]")
     while True:
         link = input(">>> ").rstrip()
