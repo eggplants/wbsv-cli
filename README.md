@@ -21,7 +21,7 @@ pip install wbsv
 
 ### Help
 
-```bash
+```shellsession
 $ wbsv -h
 usage: wbsv [-h] [-r times] [-t] [-l level] [-O] [-V] [url ...]
 
@@ -50,7 +50,7 @@ type "end", "exit", "exit()",
 
 ### Interactive mode
 
-```bash
+```shellsession
 $ wbsv
 [[Input a target url (ex: https://google.com)]]
 >>> https://www.u.tsukuba.ac.jp
@@ -70,7 +70,7 @@ $ wbsv
 
 ### From stdin
 
-```bash
+```shellsession
 $ wbsv https://tsumanne.net
 [+]Target: ['https://tsumanne.net']
 [+]4 URI(s) found.
