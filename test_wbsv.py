@@ -2,9 +2,8 @@ from urllib.parse import urlparse
 
 from wbsv import crawler, main
 
-
 # UrlFilter unit tests
-from wbsv.url_filters import SchemaFilter, OwnDomainFilter
+from wbsv.url_filters import OwnDomainFilter, SchemaFilter
 
 
 def test_schema_filter_should_reject_invalid_schema():

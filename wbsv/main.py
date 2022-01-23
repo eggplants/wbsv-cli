@@ -3,7 +3,7 @@ import argparse
 import http.client as httplib
 import sys
 import textwrap
-from typing import List, Optional, Tuple, Iterable, Set
+from typing import Iterable, List, Optional, Set, Tuple
 
 from wbsv import __version__
 from wbsv.archiver import Archiver

@@ -1,6 +1,6 @@
 import sys
 from argparse import Namespace
-from typing import Union, Tuple, Literal
+from typing import Literal, Tuple, Union
 
 import waybackpy  # type: ignore
 

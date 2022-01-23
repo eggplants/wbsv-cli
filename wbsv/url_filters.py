@@ -1,6 +1,6 @@
 import dataclasses
 from abc import ABC, abstractmethod
-from typing import Set, Iterable
+from typing import Iterable, Set
 from urllib.parse import ParseResult, urlparse
 
 
