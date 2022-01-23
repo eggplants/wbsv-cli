@@ -1,5 +1,5 @@
 from argparse import Namespace
-from typing import List, Iterable, Set, AbstractSet, Union, Any
+from typing import List, Iterable, Set
 from urllib.parse import urldefrag, urljoin, urlparse
 
 import requests
@@ -53,7 +53,7 @@ class Crawler:
     def _crawl(self, now_level: int) -> None:
         """Helper for crawling."""
         collecting_links = set()
-        collected_links_empty_set : Set[str] = set() #required for mypy type checking
+        collected_links_empty_set: Set[str] = set()  # required for mypy type checking
         collected_links: Set[str] = collected_links_empty_set.union(*self.queue)
         if now_level == 0:
             self.queue.append(set(self.urls))

@@ -3,7 +3,7 @@ import argparse
 import http.client as httplib
 import sys
 import textwrap
-from typing import List, Optional, Tuple, Iterable, Set, Any
+from typing import List, Optional, Tuple, Iterable, Set
 
 from wbsv import __version__
 from wbsv.archiver import Archiver
@@ -98,7 +98,7 @@ def wbsv(urls: Iterable[str], own: bool, only_target: bool, level: int, retry: i
     past, now, fail = 0, 0, 0
     print("[+]Target: {}".format(urls))
     c = Crawler.from_args(urls=urls, own=own, only_target=only_target, level=level)
-    retrieved_links_empty_set : Set[str] = set() #required for mypy type checking
+    retrieved_links_empty_set: Set[str] = set()  # required for mypy type checking
     retrieved_links: Set[str] = retrieved_links_empty_set.union(*c.run_crawl())
     len_links: int = len(retrieved_links)
     print("[+]{} URI(s) found.".format(len_links))
@@ -123,7 +123,7 @@ def wbsv_from_parser_args(args: argparse.Namespace) -> None:
     wbsv(args.url, args.own, args.only_target, args.level, args.retry)
 
 
-def cache_or_now(ind : int, len_links: int, archived_link: str, cached_flag: bool) -> Tuple[int, int]:
+def cache_or_now(ind: int, len_links: int, archived_link: str, cached_flag: bool) -> Tuple[int, int]:
     if cached_flag:
         print("[{:02d}/{}]: <PAST> {}".format(ind, len_links, archived_link))
         return 1, 0
