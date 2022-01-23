@@ -11,7 +11,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -U pip
-          pip install -e .
+          pip install -e ".[dev]"
       - name: Run black
         run: |
           black --diff wbsv test
