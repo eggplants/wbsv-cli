@@ -23,16 +23,13 @@ class Archiver:
 
     def archive(self, url: str) -> Union[Literal[False], Tuple[str, bool]]:
         """Archive link."""
-        wp = waybackpy.WaybackMachineSaveAPI(url, self.UA)
-        for _ in range(self.retry + 1):
-            if not self._try_savepagenow(wp):
-                continue
-            else:
-                return wp.archive_url, wp.cached_save
+        wp = waybackpy.WaybackMachineSaveAPI(url, self.UA, max_tries=self.retry)
+        if self._try_savepagenow(wp):
+            return wp.archive_url, wp.cached_save
         return False
 
     @staticmethod
-    def _try_savepagenow(wp: waybackpy.Url) -> bool:
+    def _try_savepagenow(wp: waybackpy.WaybackMachineSaveAPI) -> bool:
         """Error handler for saving with savepagenow."""
         try:
             wp.save()
