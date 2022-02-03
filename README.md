@@ -29,17 +29,15 @@ CLI tool for save webpage on Wayback Machine forever.
 Save webpage and one 's all URI(s) on Wayback Machine.
 
 positional arguments:
-  url                   Saving pages in order.
+  url                      Saving pages in order. (default: None)
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -r times, --retry times
-                        Set a retry limit on failed save.(>=0
-  -t, --only_target     Save just target webpage(s).
-  -l level, --level level
-                        Set maximum recursion depth. (>0)
-  -O, --own             Only URLs with the same domain as target
-  -V, --version         show program's version number and exit
+  -h, --help               show this help message and exit
+  -r times, --retry times  Set a retry limit on failed save. (default: 0)
+  -t, --only_target        Save just same domain of target (default: False)
+  -l level, --level level  Set maximum recursion depth (default: 1)
+  -O, --own                Only URLs with the same domain as target (default: False)
+  -V, --version            show program's version number and exit
 
 If you don't give the URL,
 interactive mode will be launched.
