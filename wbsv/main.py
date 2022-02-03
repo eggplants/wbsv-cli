@@ -2,6 +2,7 @@
 import argparse
 import http.client as httplib
 import sys
+import shutil
 import textwrap
 from typing import Iterable, List, Optional, Set
 
@@ -11,6 +12,12 @@ from wbsv.crawler import Crawler
 
 
 class HttpConnectionNotFountError(Exception):
+    pass
+
+
+class WBSVHelpFormatter(
+    argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter
+):
     pass
 
 
@@ -25,12 +32,6 @@ def check_connectivity(url: str = "www.google.com", timeout: int = 3) -> bool:
         return False
 
 
-def check_natural(v: str) -> int:
-    if int(v) < 0:
-        raise argparse.ArgumentTypeError("%s is an invalid natural number" % int(v))
-    return int(v)
-
-
 def check_positive(v: str) -> int:
     if int(v) <= 0:
         raise argparse.ArgumentTypeError("%s is an invalid natural number" % int(v))
@@ -41,7 +42,15 @@ def parse_args(args_list: Optional[List[str]] = None) -> argparse.Namespace:
     """Parse arguments."""
     parser = argparse.ArgumentParser(
         prog="wbsv",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        formatter_class=(
+            lambda prog: WBSVHelpFormatter(
+                prog,
+                **{
+                    "width": shutil.get_terminal_size(fallback=(120, 50)).columns,
+                    "max_help_position": 30,
+                },
+            )
+        ),
         description=textwrap.dedent(
             """\
             CLI tool for save webpage on Wayback Machine forever.
@@ -63,13 +72,13 @@ def parse_args(args_list: Optional[List[str]] = None) -> argparse.Namespace:
     parser.add_argument(
         "-r",
         "--retry",
-        type=check_natural,
+        type=check_positive,
         metavar="times",
-        default=0,
-        help="Set a retry limit on failed save.(>=0",
+        default=3,
+        help="Set a retry limit on failed save.",
     )
     parser.add_argument(
-        "-t", "--only_target", action="store_true", help="Save just target webpage(s)."
+        "-t", "--only_target", action="store_true", help="Save just same domain of target"
     )
     parser.add_argument(
         "-l",
@@ -77,7 +86,7 @@ def parse_args(args_list: Optional[List[str]] = None) -> argparse.Namespace:
         type=check_positive,
         metavar="level",
         default=1,
-        help="Set maximum recursion depth. (>0)",
+        help="Set maximum recursion depth",
     )
     parser.add_argument(
         "-O",

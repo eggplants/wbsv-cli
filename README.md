@@ -33,7 +33,7 @@ positional arguments:
 
 optional arguments:
   -h, --help               show this help message and exit
-  -r times, --retry times  Set a retry limit on failed save. (default: 0)
+  -r times, --retry times  Set a retry limit on failed save. (default: 3)
   -t, --only_target        Save just same domain of target (default: False)
   -l level, --level level  Set maximum recursion depth (default: 1)
   -O, --own                Only URLs with the same domain as target (default: False)

@@ -32,6 +32,7 @@ class Archiver:
     def _try_savepagenow(wp: waybackpy.WaybackMachineSaveAPI) -> bool:
         """Error handler for saving with savepagenow."""
         try:
+            pass
             wp.save()
         except waybackpy.exceptions.RedirectSaveError as e:
             print(e, file=sys.stderr)
