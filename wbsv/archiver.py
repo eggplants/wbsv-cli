@@ -1,8 +1,10 @@
-import sys
 from argparse import Namespace
 from typing import Literal, Tuple, Union
 
+import requests
 import waybackpy  # type: ignore
+
+from wbsv.utils import log_exception
 
 
 class SavepagenowFailureError(Exception):
@@ -32,16 +34,14 @@ class Archiver:
     def _try_savepagenow(wp: waybackpy.WaybackMachineSaveAPI) -> bool:
         """Error handler for saving with savepagenow."""
         try:
-            pass
             wp.save()
-        except waybackpy.exceptions.RedirectSaveError as e:
-            print(e, file=sys.stderr)
-            return False
-        except waybackpy.exceptions.WaybackError as e:
-            print(e, file=sys.stderr)
-            return False
-        except AttributeError as e:
-            print(e, file=sys.stderr)
+        except (
+            waybackpy.exceptions.RedirectSaveError,
+            waybackpy.exceptions.WaybackError,
+            requests.exceptions.TooManyRedirects,
+            AttributeError,
+        ) as e:
+            log_exception(e)
             return False
         else:
             return True
