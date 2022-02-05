@@ -78,7 +78,10 @@ def parse_args(args_list: Optional[List[str]] = None) -> argparse.Namespace:
         help="Set a retry limit on failed save.",
     )
     parser.add_argument(
-        "-t", "--only_target", action="store_true", help="Save just same domain of target"
+        "-t",
+        "--only_target",
+        action="store_true",
+        help="Save just same domain of target",
     )
     parser.add_argument(
         "-l",
