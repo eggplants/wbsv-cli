@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import argparse
 import http.client as httplib
-import sys
 import shutil
+import sys
 import textwrap
 from typing import Iterable, List, Optional, Set
 

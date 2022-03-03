@@ -3,7 +3,7 @@ from typing import Iterable, List, Set
 from urllib.parse import urldefrag, urljoin, urlparse
 
 import requests
-from bs4 import BeautifulSoup as BS  # type: ignore
+from bs4 import BeautifulSoup as BS
 
 from wbsv.url_filters import CombinedFilter, OwnDomainFilter, SchemaFilter, UrlFilter
 
