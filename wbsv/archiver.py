@@ -36,7 +36,7 @@ class Archiver:
         try:
             wp.save()
         except (
-            waybackpy.exceptions.RedirectSaveError,
+            waybackpy.exceptions.MaximumSaveRetriesExceeded,
             waybackpy.exceptions.WaybackError,
             requests.exceptions.TooManyRedirects,
             AttributeError,
